@@ -1,0 +1,53 @@
+//    private EventHandler<MouseEvent> addPointEvent = event -> {
+//        double x = event.getX();
+//        double y = event.getY();
+//
+//        drawingGC.strokeArc(x - 1, y - 1, 2, 2, 0, 360, ArcType.OPEN);
+//        //drawingGC.fillText(Integer.toString(getNum()), x - 13, y + 3);
+//    };
+//
+//    private EventHandler<MouseEvent> drawLineEvent = event -> {
+//        double x = event.getX();
+//        double y = event.getY();
+//
+//        if (!lineStarted) {
+//            drawingGC.moveTo(x, y);
+//            lineStarted = true;
+//            tempDrawing.setOnMouseMoved(event1 -> {
+//                tempDrawingGC.clearRect(0, 0, width, height);
+//                double tempX = event1.getX();
+//                double tempY = event1.getY();
+//                tempDrawingGC.strokeLine(x, y, tempX, tempY);
+//            });
+//        } else {
+//            drawingGC.lineTo(x, y);
+//            drawingGC.stroke();
+//            lineStarted = false;
+//            tempDrawing.setOnMouseMoved(null);
+//            tempDrawingGC.clearRect(0, 0, width, height);
+//        }
+//    };
+//
+//    private EventHandler<MouseEvent> drawLineAndAddPointEvent = event -> {
+//        double x = event.getX();
+//        double y = event.getY();
+//
+//        drawingGC.strokeArc(x - 1, y - 1, 2, 2, 0, 360, ArcType.OPEN);
+//        // drawingGC.fillText(Integer.toString(getNum()), x - 13, y + 3);
+//        if (!lineStarted) {
+//            drawingGC.moveTo(x, y);
+//            lineStarted = true;
+//            tempDrawing.setOnMouseMoved(event1 -> {
+//                tempDrawingGC.clearRect(0, 0, width, height);
+//                double tempX = event1.getX();
+//                double tempY = event1.getY();
+//                tempDrawingGC.strokeLine(x, y, tempX, tempY);
+//            });
+//        } else {
+//            drawingGC.lineTo(x, y);
+//            drawingGC.stroke();
+//            lineStarted = false;
+//            tempDrawing.setOnMouseMoved(null);
+//            tempDrawingGC.clearRect(0, 0, width, height);
+//        }
+//    };
