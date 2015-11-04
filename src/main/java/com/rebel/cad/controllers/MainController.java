@@ -53,6 +53,11 @@ public class MainController extends Controller implements Initializable {
     private TextField stepField;
     @FXML
     private TextField rotateField;
+    @FXML
+    private TextField deltaX;
+    @FXML
+    private TextField deltaY;
+
 
     private Canvas grid;
     private Canvas axes;
@@ -305,14 +310,15 @@ public class MainController extends Controller implements Initializable {
         }
     }
 
+    @FXML
+    private void move() {
+        move(figure, Double.parseDouble(deltaX.getText()), Double.parseDouble(deltaY.getText()));
+    }
+
     private void move(Node node, double x, double y) {
         if (node instanceof Line) {
             Line line = (Line) node;
-            List<Double> dots = line.getPoints();
-            for (int i = 0; i < dots.size(); i += 2) {
-                dots.set(i, dots.get(i) + x);
-                dots.set(i, dots.get(i + 1) + y);
-            }
+            line.move(x, y);
         } else if (node instanceof Group) {
             Group group = (Group) node;
             for (Node child : group.getChildren()) {
