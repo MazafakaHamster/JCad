@@ -49,8 +49,10 @@ public class Line extends Polyline {
         double radians = Math.toRadians(degrees);
         List<Dot> dots = getDots();
         for (Dot dot : dots) {
-            dot.setX(x + (dot.getX() - x) * Math.cos(radians) - (dot.getY() - y) * Math.sin(radians));
-            dot.setY(y + (dot.getX() - x) * Math.sin(radians) + (dot.getY() - y) * Math.cos(radians));
+            double x1 = x + (dot.getX() - x) * Math.cos(radians) - (dot.getY() - y) * Math.sin(radians);
+            double y1 = y + (dot.getX() - x) * Math.sin(radians) + (dot.getY() - y) * Math.cos(radians);
+            dot.setX(x1);
+            dot.setY(y1);
         }
         setDots(dots);
     }

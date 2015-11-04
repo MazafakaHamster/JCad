@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Slava on 04.09.2015.
  */
-public class MainController implements Initializable {
+public class MainController extends Controller implements Initializable {
 
     private static int dotCount;
 
@@ -82,10 +82,7 @@ public class MainController implements Initializable {
             resize();
         });
 
-        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50),toRealX(50), toRealY(50)));
-
-        rotateField.setText("50");
-        rotate();
+        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
     }
 
     private double getWidthCenter() {
@@ -157,7 +154,7 @@ public class MainController implements Initializable {
     }
 
     private double toRealY(double y) {
-        return -y + getHeightCenter();
+        return -y + getHeightCenter() - 20;
     }
 
     private double toFakeY(double y) {
@@ -242,38 +239,6 @@ public class MainController implements Initializable {
         });
     }
 
-    private void showInform(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    private double askParam(String content) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Set parameter");
-        dialog.setHeaderText(null);
-        dialog.setContentText(content);
-
-        while (true) {
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent() && !result.get().isEmpty()) {
-                return Double.parseDouble(result.get());
-            } else {
-                showError("Field is empty");
-            }
-        }
-    }
-
-    private void showError(String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
     private double getPointOnLine(HintedDot a, HintedDot b, double x) {
         return (x - a.getCenterX()) * (b.getCenterY() - a.getCenterY()) / (b.getCenterX() - a.getCenterX()) + a.getCenterY();
     }
@@ -313,7 +278,7 @@ public class MainController implements Initializable {
             rotationPoint = new HintedDot(event.getX(), event.getY(), dotCount++);
             rotationPoint.setTooltip(fx, fy);
             groupPane.getChildren().add(rotationPoint);
-            double rotate = askParam("Set rotation in degrees");
+            double rotate = Double.parseDouble(rotateField.getText());
             rotate(figure, rotate);
             groupPane.setOnMouseClicked(null);
         });
@@ -328,33 +293,33 @@ public class MainController implements Initializable {
 
     private void rotate(Node node, double degrees) {
         if (node instanceof Line) {
-            Line polyline = (Line) node;
-            polyline.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
+            Line line = (Line) node;
+            line.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
         } else if (node instanceof Group) {
             Group group = (Group) node;
             for (Node child : group.getChildren()) {
                 rotate(child, degrees);
             }
         } else {
-            System.err.println(node);
+            System.err.println("Unknonw node type: " + node);
         }
     }
 
     private void move(Node node, double x, double y) {
-        if (node instanceof Polyline) {
-            Polyline polyline = (Polyline) node;
-            List<Double> dots = polyline.getPoints();
+        if (node instanceof Line) {
+            Line line = (Line) node;
+            List<Double> dots = line.getPoints();
             for (int i = 0; i < dots.size(); i += 2) {
                 dots.set(i, dots.get(i) + x);
                 dots.set(i, dots.get(i + 1) + y);
             }
-        } else {
-            if (node instanceof Group) {
-                Group group = (Group) node;
-                for (Node child : group.getChildren()) {
-                    move(child, x, y);
-                }
+        } else if (node instanceof Group) {
+            Group group = (Group) node;
+            for (Node child : group.getChildren()) {
+                move(child, x, y);
             }
+        } else {
+            System.err.println("Unknonw node type: " + node);
         }
     }
 }
