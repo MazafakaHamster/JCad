@@ -1,31 +1,23 @@
 package com.rebel.cad.controllers;
 
 import com.rebel.cad.MainApp;
-import com.rebel.cad.shapes.Dot;
-import com.rebel.cad.shapes.HintedDot;
-import com.rebel.cad.shapes.Line;
+import com.rebel.cad.shapes.*;
 import com.rebel.cad.util.Helper;
-import com.rebel.cad.util.Shaper;
-import javafx.beans.binding.DoubleExpression;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -180,7 +172,7 @@ public class MainController extends Controller implements Initializable {
         Dot dotOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
         Dot dotOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
-            figure.getChildren().add(Shaper.drawCirlce(x, y, radius, Shaper.Axis.Both));
+            figure.getChildren().add(new Circle(x, y, radius));//, Shaper.Axis.Both));
             x += figureHeight / 6;
         }
 
@@ -193,7 +185,7 @@ public class MainController extends Controller implements Initializable {
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
-        figure.getChildren().add(Shaper.drawArc(x, y, figureHeight / 14, 190, 350, Shaper.Axis.Both));
+        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Shaper.Axis.Both));
         Dot topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
         Dot topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 
@@ -204,14 +196,14 @@ public class MainController extends Controller implements Initializable {
         figure.getChildren().add(new Line(x, y, dotOnFirstCircle.getX(), dotOnFirstCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
         figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
-        figure.getChildren().add(Shaper.drawArc(x, y, radius2, 111, 282, Shaper.Axis.Horizontal));
+        figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Shaper.Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
         figure.getChildren().add(new Line(x, y, dotOnLastCircle.getX(), dotOnLastCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
         figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
-        figure.getChildren().add(Shaper.drawArc(x, y, radius2, 258, 68, Shaper.Axis.Horizontal));
+        figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Shaper.Axis.Horizontal));
 
         figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
         figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
@@ -297,9 +289,9 @@ public class MainController extends Controller implements Initializable {
     }
 
     private void rotate(Node node, double degrees) {
-        if (node instanceof Line) {
-            Line line = (Line) node;
-            line.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
+        if (node instanceof Shape) {
+            Shape shape = (Shape) node;
+            shape.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
         } else if (node instanceof Group) {
             Group group = (Group) node;
             for (Node child : group.getChildren()) {
@@ -316,9 +308,9 @@ public class MainController extends Controller implements Initializable {
     }
 
     private void move(Node node, double x, double y) {
-        if (node instanceof Line) {
-            Line line = (Line) node;
-            line.move(x, y);
+        if (node instanceof Shape) {
+            Shape shape = (Shape) node;
+            shape.move(x, y);
         } else if (node instanceof Group) {
             Group group = (Group) node;
             for (Node child : group.getChildren()) {
