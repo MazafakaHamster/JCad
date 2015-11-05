@@ -22,7 +22,6 @@ public class MainApp extends Application {
         mainStage = primaryStage;
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("CAD");
-        //primaryStage.setResizable(false);
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
         primaryStage.show();
     }

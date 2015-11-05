@@ -4,7 +4,13 @@ package com.rebel.cad.shapes;
  * Created by Slava on 07.10.2015.
  */
 public class Line extends Shape {
+
     public Line(double... points) {
         super(points);
+    }
+
+    public Line(double x1, double y1, double x2, double y2, double opacity) {
+        super(x1, y1, x2, y2);
+        setOpacity(opacity);
     }
 }

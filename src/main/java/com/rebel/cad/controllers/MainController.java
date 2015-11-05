@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,9 +51,8 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private TextField deltaY;
 
-
-    private Canvas grid;
-    private Canvas axes;
+    private Group grid;
+    private Group axes;
 
     private int step = 20;
 
@@ -61,8 +61,8 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        grid = createCanvasGrid(width, height - 40, step);
-        axes = createCanvasAxes(width, height - 40);
+        grid = createGrid(width, height - 40, step);
+        axes = createAxis(width, height - 40);
         groupPane.getChildren().addAll(grid, axes);
 
         groupPane.setOnMouseMoved(event -> {
@@ -90,46 +90,38 @@ public class MainController extends Controller implements Initializable {
         return height / 2 - (height / 2 % step);
     }
 
-    private Canvas createCanvasGrid(double width, double height, int step) {
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setLineWidth(1);
-        canvas.setOpacity(0.4);
+    private Group createGrid(double width, double height, int step) {
+        Group grid = new Group();
 
         double x1;
         for (double x = 0; x < width; x += step) {
             x1 = x + 0.5;
-            gc.strokeLine(x1, 0, x1, height);
+            grid.getChildren().add(new Line(x1, 0, x1, height, 0.4));
         }
 
         double y1;
         for (double y = 0; y < height; y += step) {
             y1 = y + 0.5;
-            gc.strokeLine(0, y1, width, y1);
+            grid.getChildren().add(new Line(0, y1, width, y1, 0.4));
         }
 
-        gc.fillText(Integer.toString(step), getWidthCenter() - 20, getHeightCenter() - step - step / 10);
+        Text text = new Text(getWidthCenter() - 20, getHeightCenter() - step - step / 10, Integer.toString(step));
+        text.setOpacity(1);
+        grid.getChildren().add(text);
 
-        return canvas;
+        return grid;
     }
 
-    private Canvas createCanvasAxes(double width, double height) {
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setLineWidth(1);
+    private Group createAxis(double width, double height) {
+        Group axis = new Group();
 
-        gc.moveTo(getWidthCenter(), 0);
-        gc.lineTo(getWidthCenter(), height);
-        gc.stroke();
+        axis.getChildren().add(new Line(getWidthCenter(), 0, getWidthCenter(), height));
+        axis.getChildren().add(new Line(0, getHeightCenter(), width, getHeightCenter()));
 
-        gc.moveTo(0, getHeightCenter());
-        gc.lineTo(width, getHeightCenter());
-        gc.stroke();
+        axis.getChildren().add(new Text(width - 20, getHeightCenter() + 20, "X"));
+        axis.getChildren().add(new Text(getWidthCenter() - 20, 20, "Y"));
 
-        gc.fillText("X", width - 20, getHeightCenter() + 20);
-        gc.fillText("Y", getWidthCenter() - 20, 20);
-
-        return canvas;
+        return axis;
     }
 
     @FXML
@@ -245,8 +237,8 @@ public class MainController extends Controller implements Initializable {
         int prevStep = step;
         step = Integer.parseInt(stepField.getText());
         groupPane.getChildren().removeAll(axes, grid);
-        grid = createCanvasGrid(width, height, step);
-        axes = createCanvasAxes(width, height);
+        grid = createGrid(width, height, step);
+        axes = createAxis(width, height);
         groupPane.getChildren().add(axes);
         axes.toBack();
         groupPane.getChildren().add(grid);
@@ -257,8 +249,8 @@ public class MainController extends Controller implements Initializable {
 
     private void resize() {
         groupPane.getChildren().removeAll(axes, grid);
-        grid = createCanvasGrid(width, height, step);
-        axes = createCanvasAxes(width, height);
+        grid = createGrid(width, height, step);
+        axes = createAxis(width, height);
         groupPane.getChildren().add(axes);
         axes.toBack();
         groupPane.getChildren().add(grid);
