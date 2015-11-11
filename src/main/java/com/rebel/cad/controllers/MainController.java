@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -63,6 +64,7 @@ public class MainController extends Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         grid = createGrid(width, height - 40, step);
         axes = createAxis(width, height - 40);
+
         groupPane.getChildren().addAll(grid, axes);
 
         groupPane.setOnMouseMoved(event -> {
@@ -70,42 +72,43 @@ public class MainController extends Controller implements Initializable {
             yCoord.setText(Double.toString(toFakeY(event.getY())));
         });
 
+        rootBox.setPrefWidth(800);
+        rootBox.setPrefHeight(600);
+
         rootBox.widthProperty().addListener((observable, oldValue, newValue) -> {
-            width = newValue.intValue();
+            width = newValue.doubleValue();
+            double delta = width - oldValue.doubleValue();
+            if (oldValue.intValue() != 0)
+                move(figure, delta / 2, 0);
             resize();
         });
         rootBox.heightProperty().addListener((observable, oldValue, newValue) -> {
-            height = newValue.intValue();
+            height = newValue.doubleValue();
+            double delta = height - oldValue.doubleValue();
+            if (oldValue.intValue() != 0)
+                move(figure, 0, delta / 2);
             resize();
         });
 
         figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
     }
 
-    private double getWidthCenter() {
-        return width / 2 - (width / 2 % step);
-    }
-
-    private double getHeightCenter() {
-        return height / 2 - (height / 2 % step);
-    }
-
     private Group createGrid(double width, double height, int step) {
         Group grid = new Group();
 
         double x1;
-        for (double x = 0; x < width; x += step) {
+        for (double x = (width / 2) % step; x < width; x += step) {
             x1 = x + 0.5;
             grid.getChildren().add(new Line(x1, 0, x1, height, 0.4));
         }
 
         double y1;
-        for (double y = 0; y < height; y += step) {
+        for (double y = (height / 2) % step; y < height; y += step) {
             y1 = y + 0.5;
             grid.getChildren().add(new Line(0, y1, width, y1, 0.4));
         }
 
-        Text text = new Text(getWidthCenter() - 20, getHeightCenter() - step - step / 10, Integer.toString(step));
+        Text text = new Text(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
         text.setOpacity(1);
         grid.getChildren().add(text);
 
@@ -115,11 +118,11 @@ public class MainController extends Controller implements Initializable {
     private Group createAxis(double width, double height) {
         Group axis = new Group();
 
-        axis.getChildren().add(new Line(getWidthCenter(), 0, getWidthCenter(), height));
-        axis.getChildren().add(new Line(0, getHeightCenter(), width, getHeightCenter()));
+        axis.getChildren().add(new Line(width / 2, 0, width / 2, height));
+        axis.getChildren().add(new Line(0, height / 2, width, height / 2));
 
-        axis.getChildren().add(new Text(width - 20, getHeightCenter() + 20, "X"));
-        axis.getChildren().add(new Text(getWidthCenter() - 20, 20, "Y"));
+        axis.getChildren().add(new Text(width - 20, height / 2 + 20, "X"));
+        axis.getChildren().add(new Text(width / 2 - 20, 20, "Y"));
 
         return axis;
     }
@@ -135,19 +138,19 @@ public class MainController extends Controller implements Initializable {
     }
 
     private double toRealX(double x) {
-        return x + getWidthCenter();
+        return x + width / 2;
     }
 
     private double toFakeX(double x) {
-        return x - getWidthCenter();
+        return x - width / 2;
     }
 
     private double toRealY(double y) {
-        return -y + getHeightCenter() - 20;
+        return -y + height / 2;
     }
 
     private double toFakeY(double y) {
-        return -(y - getHeightCenter());
+        return -(y - height / 2);
     }
 
     private void drawFigure(List<HintedDot> dots) {
@@ -206,7 +209,7 @@ public class MainController extends Controller implements Initializable {
         Line verAx = new Line(centerDot.getCenterX(), centerDot.getCenterY() - figureHeight / 1.8, centerDot.getCenterX(), centerDot.getCenterY() + figureHeight / 1.8);
         verAx.getStrokeDashArray().addAll(10d);
         figure.getChildren().add(verAx);
-        figure.setClip(new Rectangle(0, 50, width, height));
+        figure.setClip(new Rectangle(0, 0, width - 180, height));
     }
 
     @FXML
@@ -249,8 +252,8 @@ public class MainController extends Controller implements Initializable {
 
     private void resize() {
         groupPane.getChildren().removeAll(axes, grid);
-        grid = createGrid(width, height, step);
-        axes = createAxis(width, height);
+        grid = createGrid(width - 180, height, step);
+        axes = createAxis(width - 180, height);
         groupPane.getChildren().add(axes);
         axes.toBack();
         groupPane.getChildren().add(grid);
@@ -276,7 +279,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void rotate() {
         groupPane.getChildren().remove(rotationPoint);
-        rotationPoint = new HintedDot(getWidthCenter(), getHeightCenter(), dotCount++);
+        rotationPoint = new HintedDot(width / 2, height / 2, dotCount++);
         rotate(figure, Double.parseDouble(rotateField.getText()));
     }
 
@@ -296,7 +299,19 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void move() {
-        move(figure, Double.parseDouble(deltaX.getText()), Double.parseDouble(deltaY.getText()));
+        double x;
+        double y;
+        if (deltaX.getText().isEmpty()) {
+            x = 0;
+        } else {
+            x = Double.parseDouble(deltaX.getText());
+        }
+        if (deltaY.getText().isEmpty()) {
+            y = 0;
+        } else {
+            y = Double.parseDouble(deltaY.getText());
+        }
+        move(figure, x, y);
     }
 
     private void move(Node node, double x, double y) {
