@@ -7,11 +7,7 @@ import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -91,8 +87,7 @@ public class MainController extends Controller implements Initializable {
             resize();
         });
 
-        figure.getChildren().addAll(new Arc(toRealX(0d), toRealY(50d), 50, 190, 350, Axis.Both));
-        //figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
     }
 
     private Group createGrid(double width, double height, int step) {
@@ -169,7 +164,7 @@ public class MainController extends Controller implements Initializable {
         Dot dotOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
         Dot dotOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
-            figure.getChildren().add(new Circle(x, y, radius));//, Shaper.Axis.Both));
+            figure.getChildren().add(new Circle(x, y, radius, Axis.Both));
             x += figureHeight / 6;
         }
 
@@ -182,7 +177,7 @@ public class MainController extends Controller implements Initializable {
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
-        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Shaper.Axis.Both));
+        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350, Axis.Both));
         Dot topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
         Dot topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 

@@ -22,10 +22,9 @@ public class Arc extends Shape {
         this.radius = r;
 
         double startRad = Math.toRadians(this.start);
+
         getPoints().addAll(x + r * Math.cos(startRad), y + r * Math.sin(startRad));
         if (start < end && (end - start) % 5 == 0) {
-//            getPoints().addAll(x + r, y);
-            System.out.println("Optimized arc " + start + " " + end);
             for (int i = start; i <= end; i += 5) {
                 double iRad = Math.toRadians(i);
                 getPoints().addAll(x + r * Math.cos(iRad), y + r * Math.sin(iRad));

@@ -10,18 +10,9 @@ import java.util.Arrays;
 public class Helper {
     public static Dot getDotOnArc(double centerX, double centerY, double r, double pos) {
         Dot dot = new Dot();
-        dot.setX(centerX + r * Math.cos(pos * Math.PI / 180));
-        dot.setY(centerY + r * Math.sin(pos * Math.PI / 180));
+        double posRad = Math.toRadians(pos);
+        dot.setX(centerX + r * Math.cos(posRad));
+        dot.setY(centerY + r * Math.sin(posRad));
         return dot;
-    }
-
-    public static double[] rotate(double x, double y, double degrees, double px, double py) {
-        x -= px;
-        y -= py;
-        x = x * Math.cos(degrees) - y * Math.sin(degrees);
-        y = x * Math.sin(degrees) + y * Math.cos(degrees);
-        x += px;
-        y += py;
-        return new double[] {x, y};
     }
 }
