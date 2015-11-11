@@ -1,6 +1,7 @@
 package com.rebel.cad.controllers;
 
 import com.rebel.cad.MainApp;
+import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.shapes.*;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
@@ -32,7 +33,7 @@ public class MainController extends Controller implements Initializable {
     private ArrayList<HintedDot> dotsList = new ArrayList<>();
     private HintedDot rotationPoint;
     @FXML
-    private Group figure;
+    private ShapeGroup figure;
 
 
     @FXML
@@ -79,14 +80,14 @@ public class MainController extends Controller implements Initializable {
             width = newValue.doubleValue();
             double delta = width - oldValue.doubleValue();
             if (oldValue.intValue() != 0)
-                move(figure, delta / 2, 0);
+                figure.move(delta / 2, 0);
             resize();
         });
         rootBox.heightProperty().addListener((observable, oldValue, newValue) -> {
             height = newValue.doubleValue();
             double delta = height - oldValue.doubleValue();
             if (oldValue.intValue() != 0)
-                move(figure, 0, delta / 2);
+                figure.move(0, delta / 2);
             resize();
         });
 
@@ -138,11 +139,11 @@ public class MainController extends Controller implements Initializable {
     }
 
     private double toRealX(double x) {
-        return x + width / 2;
+        return x + width / 2 - 90;
     }
 
     private double toFakeX(double x) {
-        return x - width / 2;
+        return x - width / 2 + 90;
     }
 
     private double toRealY(double y) {
@@ -270,8 +271,8 @@ public class MainController extends Controller implements Initializable {
             rotationPoint = new HintedDot(event.getX(), event.getY(), dotCount++);
             rotationPoint.setTooltip(fx, fy);
             groupPane.getChildren().add(rotationPoint);
-            double rotate = Double.parseDouble(rotateField.getText());
-            rotate(figure, rotate);
+            double degrees = Double.parseDouble(rotateField.getText());
+            figure.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
             groupPane.setOnMouseClicked(null);
         });
     }
@@ -279,22 +280,9 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void rotate() {
         groupPane.getChildren().remove(rotationPoint);
-        rotationPoint = new HintedDot(width / 2, height / 2, dotCount++);
-        rotate(figure, Double.parseDouble(rotateField.getText()));
-    }
-
-    private void rotate(Node node, double degrees) {
-        if (node instanceof Shape) {
-            Shape shape = (Shape) node;
-            shape.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
-        } else if (node instanceof Group) {
-            Group group = (Group) node;
-            for (Node child : group.getChildren()) {
-                rotate(child, degrees);
-            }
-        } else {
-            System.err.println("Unknonw node type: " + node);
-        }
+        rotationPoint = new HintedDot(toRealX(0), toRealY(0), dotCount++);
+        double degrees = Double.parseDouble(rotateField.getText());
+        figure.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
     }
 
     @FXML
@@ -311,20 +299,6 @@ public class MainController extends Controller implements Initializable {
         } else {
             y = Double.parseDouble(deltaY.getText());
         }
-        move(figure, x, y);
-    }
-
-    private void move(Node node, double x, double y) {
-        if (node instanceof Shape) {
-            Shape shape = (Shape) node;
-            shape.move(x, y);
-        } else if (node instanceof Group) {
-            Group group = (Group) node;
-            for (Node child : group.getChildren()) {
-                move(child, x, y);
-            }
-        } else {
-            System.err.println("Unknonw node type: " + node);
-        }
+        figure.move(x, y);
     }
 }

@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
+<?import com.rebel.cad.collections.ShapeGroup?>
 <VBox fx:id="rootBox" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController">
    <children>
       <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
@@ -36,7 +37,7 @@
          <children>
             <Pane fx:id="groupPane">
                <children>
-                  <Group fx:id="figure" autoSizeChildren="false" />
+                  <ShapeGroup fx:id="figure" autoSizeChildren="false" />
                </children>
             </Pane>
             <Accordion>
