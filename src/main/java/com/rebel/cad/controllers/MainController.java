@@ -91,7 +91,8 @@ public class MainController extends Controller implements Initializable {
             resize();
         });
 
-        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+        figure.getChildren().addAll(new Arc(toRealX(0d), toRealY(50d), 50, 190, 350, Axis.Both));
+        //figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
     }
 
     private Group createGrid(double width, double height, int step) {

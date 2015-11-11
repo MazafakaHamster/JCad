@@ -24,13 +24,13 @@ public class Arc extends Shape {
         double startRad = Math.toRadians(this.start);
         getPoints().addAll(x + r * Math.cos(startRad), y + r * Math.sin(startRad));
         if (start < end && (end - start) % 5 == 0) {
-            getPoints().addAll(x + r, y);
+//            getPoints().addAll(x + r, y);
+            System.out.println("Optimized arc " + start + " " + end);
             for (int i = start; i <= end; i += 5) {
                 double iRad = Math.toRadians(i);
                 getPoints().addAll(x + r * Math.cos(iRad), y + r * Math.sin(iRad));
             }
-        }
-        if (start <= end) {
+        } else if (start <= end) {
             for (int i = start; i <= end; i += 1) {
                 double iRad = Math.toRadians(i);
                 getPoints().addAll(x + r * Math.cos(iRad), y + r * Math.sin(iRad));
@@ -53,6 +53,7 @@ public class Arc extends Shape {
     }
 
     protected void buildAxis(Axis axis, double x, double y, double r) {
+        axisGroup = new ShapeGroup();
         if (Axis.Both.equals(axis)) {
             Line horAxis = new Line(x - 1.2 * r, y, x + 1.2 * r, y);
             Line vertAxis = new Line(x, y - 1.2 * r, x, y + 1.2 * r);
