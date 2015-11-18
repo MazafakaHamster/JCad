@@ -6,7 +6,6 @@ import com.rebel.cad.shapes.*;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -25,7 +24,6 @@ import java.util.ResourceBundle;
 public class MainController extends Controller implements Initializable {
 
     private static int dotCount;
-
     private ArrayList<HintedDot> dotsList = new ArrayList<>();
     private HintedDot rotationPoint;
     @FXML
@@ -49,8 +47,8 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private TextField deltaY;
 
-    private Group grid;
-    private Group axes;
+    private ShapeGroup grid;
+    private ShapeGroup axises;
 
     private int step = 20;
 
@@ -60,9 +58,9 @@ public class MainController extends Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         grid = createGrid(width, height - 40, step);
-        axes = createAxis(width, height - 40);
+        axises = createAxis(width, height - 40);
 
-        groupPane.getChildren().addAll(grid, axes);
+        groupPane.getChildren().addAll(grid, axises);
 
         groupPane.setOnMouseMoved(event -> {
             xCoord.setText(Double.toString(toFakeX(event.getX())));
@@ -88,10 +86,11 @@ public class MainController extends Controller implements Initializable {
         });
 
         figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+        figure.getChildren().addAll(new ShapeText(toRealX(60), toRealY(60), "Hello"));
     }
 
-    private Group createGrid(double width, double height, int step) {
-        Group grid = new Group();
+    private ShapeGroup createGrid(double width, double height, int step) {
+        ShapeGroup grid = new ShapeGroup();
 
         double x1;
         for (double x = (width / 2) % step; x < width; x += step) {
@@ -105,33 +104,37 @@ public class MainController extends Controller implements Initializable {
             grid.getChildren().add(new Line(0, y1, width, y1, 0.4));
         }
 
-        Text text = new Text(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
+        ShapeText text = new ShapeText(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
         text.setOpacity(1);
         grid.getChildren().add(text);
 
         return grid;
     }
 
-    private Group createAxis(double width, double height) {
-        Group axis = new Group();
+    private ShapeGroup createAxis(double width, double height) {
+        ShapeGroup axis = new ShapeGroup();
 
         axis.getChildren().add(new Line(width / 2, 0, width / 2, height));
         axis.getChildren().add(new Line(0, height / 2, width, height / 2));
 
-        axis.getChildren().add(new Text(width - 20, height / 2 + 20, "X"));
-        axis.getChildren().add(new Text(width / 2 - 20, 20, "Y"));
+        axis.getChildren().add(new ShapeText(width - 20, height / 2 + 20, "X"));
+        axis.getChildren().add(new ShapeText(width / 2 - 20, 20, "Y"));
 
         return axis;
     }
 
     @FXML
     private void erase() {
-        dotsList.add(rotationPoint);
-        groupPane.getChildren().removeAll(dotsList);
-        dotsList.clear();
-        dotCount = 0;
-        figure.getChildren().removeAll(figure.getChildren());
-        figure.getChildren().clear();
+//        dotsList.add(rotationPoint);
+//        groupPane.getChildren().removeAll(dotsList);
+//        dotsList.clear();
+//        dotCount = 0;
+//        figure.getChildren().removeAll(figure.getChildren());
+//        figure.getChildren().clear();
+        figure.afinnis(0.1, 0.1, 0.1, 0.1, 3, 5);
+        grid.afinnis(0.1, 0.1, 0.1, 0.1, 3, 5);
+        axises.afinnis(0.1, 0.1, 0.1, 0.1, 3, 5);
+
     }
 
     private double toRealX(double x) {
@@ -236,11 +239,11 @@ public class MainController extends Controller implements Initializable {
     private void rebuild() {
         int prevStep = step;
         step = Integer.parseInt(stepField.getText());
-        groupPane.getChildren().removeAll(axes, grid);
+        groupPane.getChildren().removeAll(axises, grid);
         grid = createGrid(width, height, step);
-        axes = createAxis(width, height);
-        groupPane.getChildren().add(axes);
-        axes.toBack();
+        axises = createAxis(width, height);
+        groupPane.getChildren().add(axises);
+        axises.toBack();
         groupPane.getChildren().add(grid);
         grid.toBack();
         figure.setScaleX(step / prevStep);
@@ -248,11 +251,11 @@ public class MainController extends Controller implements Initializable {
     }
 
     private void resize() {
-        groupPane.getChildren().removeAll(axes, grid);
+        groupPane.getChildren().removeAll(axises, grid);
         grid = createGrid(width - 180, height, step);
-        axes = createAxis(width - 180, height);
-        groupPane.getChildren().add(axes);
-        axes.toBack();
+        axises = createAxis(width - 180, height);
+        groupPane.getChildren().add(axises);
+        axises.toBack();
         groupPane.getChildren().add(grid);
         grid.toBack();
     }
