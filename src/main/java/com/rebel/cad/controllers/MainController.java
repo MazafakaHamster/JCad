@@ -11,16 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Created by Slava on 04.09.2015.
- */
 public class MainController extends Controller implements Initializable {
 
     private static int dotCount;
@@ -46,6 +42,38 @@ public class MainController extends Controller implements Initializable {
     private TextField deltaX;
     @FXML
     private TextField deltaY;
+
+    @FXML
+    private TextField affXX;
+    @FXML
+    private TextField affXY;
+    @FXML
+    private TextField affYX;
+    @FXML
+    private TextField affYY;
+    @FXML
+    private TextField affDX;
+    @FXML
+    private TextField affDY;
+
+    @FXML
+    private TextField projXX;
+    @FXML
+    private TextField projXY;
+    @FXML
+    private TextField projXW;
+    @FXML
+    private TextField projYX;
+    @FXML
+    private TextField projYY;
+    @FXML
+    private TextField projYW;
+    @FXML
+    private TextField projX;
+    @FXML
+    private TextField projY;
+    @FXML
+    private TextField projW;
 
     private ShapeGroup grid;
     private ShapeGroup axises;
@@ -86,7 +114,7 @@ public class MainController extends Controller implements Initializable {
         });
 
         figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
-        figure.getChildren().addAll(new ShapeText(toRealX(60), toRealY(60), "Hello"));
+        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -104,7 +132,7 @@ public class MainController extends Controller implements Initializable {
             grid.getChildren().add(new Line(0, y1, width, y1, 0.4));
         }
 
-        ShapeText text = new ShapeText(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
+        TText text = new TText(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
         text.setOpacity(1);
         grid.getChildren().add(text);
 
@@ -117,8 +145,8 @@ public class MainController extends Controller implements Initializable {
         axis.getChildren().add(new Line(width / 2, 0, width / 2, height));
         axis.getChildren().add(new Line(0, height / 2, width, height / 2));
 
-        axis.getChildren().add(new ShapeText(width - 20, height / 2 + 20, "X"));
-        axis.getChildren().add(new ShapeText(width / 2 - 20, 20, "Y"));
+        axis.getChildren().add(new TText(width - 20, height / 2 + 20, "X"));
+        axis.getChildren().add(new TText(width / 2 - 20, 20, "Y"));
 
         return axis;
     }
@@ -131,9 +159,10 @@ public class MainController extends Controller implements Initializable {
 //        dotCount = 0;
 //        figure.getChildren().removeAll(figure.getChildren());
 //        figure.getChildren().clear();
-        figure.afinnis(0.1, 0.1, 0.1, 0.1, 3, 5);
-        grid.afinnis(0.1, 0.1, 0.1, 0.1, 3, 5);
-        axises.afinnis(0.1, 0.1, 0.1, 0.1, 3, 5);
+        figure.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
+        axises.project(width, height / 2, 0.01, width / 2, height, 0.01, width/2, height/2, 0.01);
+        grid.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
+        clip();
 
     }
 
@@ -209,7 +238,14 @@ public class MainController extends Controller implements Initializable {
         Line verAx = new Line(centerDot.getCenterX(), centerDot.getCenterY() - figureHeight / 1.8, centerDot.getCenterX(), centerDot.getCenterY() + figureHeight / 1.8);
         verAx.getStrokeDashArray().addAll(10d);
         figure.getChildren().add(verAx);
+        clip();
+    }
+
+    private void clip() {
         figure.setClip(new Rectangle(0, 0, width - 180, height));
+        axises.setClip(new Rectangle(0, 0, width - 180, height));
+        grid.setClip(new Rectangle(0, 0, width - 180, height));
+
     }
 
     @FXML
@@ -240,12 +276,17 @@ public class MainController extends Controller implements Initializable {
         int prevStep = step;
         step = Integer.parseInt(stepField.getText());
         groupPane.getChildren().removeAll(axises, grid);
-        grid = createGrid(width, height, step);
-        axises = createAxis(width, height);
+        grid = createGrid(width - 180, height, step);
+        axises = createAxis(width - 180, height);
         groupPane.getChildren().add(axises);
         axises.toBack();
         groupPane.getChildren().add(grid);
         grid.toBack();
+
+        figure.getChildren().clear();
+
+        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
         figure.setScaleX(step / prevStep);
         figure.setScaleY(step / prevStep);
     }
@@ -299,5 +340,40 @@ public class MainController extends Controller implements Initializable {
             y = Double.parseDouble(deltaY.getText());
         }
         figure.move(x, y);
+    }
+
+    @FXML
+    private void affinis() {
+        double xx = Double.parseDouble(affXX.getText()) / step;
+        double xy = Double.parseDouble(affXY.getText()) / step;
+        double yx = Double.parseDouble(affYX.getText()) / step;
+        double yy = Double.parseDouble(affYY.getText()) / step;
+        double dx = Double.parseDouble(affDX.getText());
+        double dy = Double.parseDouble(affDY.getText());
+
+        axises.affinis(xx, xy, yx, yy, dx, dy);
+        grid.affinis(xx, xy, yx, yy, dx, dy);
+        figure.affinis(xx, xy, yx, yy, dx, dy);
+
+        clip();
+    }
+
+    @FXML
+    private void project() {
+        rebuild();
+        double xx = Double.parseDouble(projXX.getText());
+        double xy = Double.parseDouble(projXY.getText());
+        double xw = Double.parseDouble(projXW.getText());
+        double yx = Double.parseDouble(projYX.getText());
+        double yy = Double.parseDouble(projYY.getText());
+        double yw = Double.parseDouble(projYW.getText());
+        double x = Double.parseDouble(projX.getText());
+        double y = Double.parseDouble(projY.getText());
+        double w = Double.parseDouble(projW.getText());
+
+        figure.project(xx, xy, xw, yx, yy, yw, toRealX(x), toRealY(y), w);
+        axises.project(xx, xy, xw, yx, yy, yw, toRealX(x), toRealY(y), w);
+        grid.project(xx, xy, xw, yx, yy, yw, toRealX(x), toRealY(y), w);
+        clip();
     }
 }

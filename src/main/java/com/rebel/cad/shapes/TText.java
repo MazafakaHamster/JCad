@@ -5,9 +5,10 @@ import javafx.scene.text.Text;
 /**
  * Created by Slava on 18.11.2015.
  */
-public class ShapeText extends Text {
 
-    public ShapeText(double x, double y, String text) {
+public class TText extends Text implements Transformable {
+
+    public TText(double x, double y, String text) {
         super(x, y, text);
     }
 
@@ -30,15 +31,15 @@ public class ShapeText extends Text {
         double x0 = getX();
         double y0 = getY();
 
-        setX((x * w + xx * wx * x0 + xy * wy * y0) / (w + wx * x0 + wy * y0));
-        setY((y * w + yx * wx * x0 + yy * wy * y0) / (w + wx * x0 + wy * y0));
+        setX(x0 + (x * w + xx * wx * x0 + xy * wy * y0) / (w + wx * x0 + wy * y0));
+        setY(y0 + (y * w + yx * wx * x0 + yy * wy * y0) / (w + wx * x0 + wy * y0));
     }
 
-    public void afinnis(double xx, double xy, double yx, double yy, double dx, double dy) {
+    public void affinis(double xx, double xy, double yx, double yy, double dx, double dy) {
         double x = getX();
         double y = getY();
 
-        setX(x * xx + y * xy + x);
-        setY(x * yx + y * yy + y);
+        setX(x * xx + y * xy + x + dx);
+        setY(x * yx + y * yy + y + dy);
     }
 }

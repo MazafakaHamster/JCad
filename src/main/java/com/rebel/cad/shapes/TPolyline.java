@@ -8,24 +8,18 @@ import java.util.List;
 /**
  * Created by Slava on 05.11.2015.
  */
-public class Shape extends Polyline {
+public class TPolyline extends Polyline implements Transformable {
 
-    public Shape(double... points) {
+    public TPolyline(double... points) {
         super(points);
     }
 
-    public void addPoints(Dot... dots) {
-        for (Dot dot : dots) {
-            getPoints().addAll(dot.getX(), dot.getY());
+    public List<Dot> getDots() {
+        ArrayList<Dot> dots = new ArrayList<>();
+        for (int i = 0; i < getPoints().size(); i += 2) {
+            dots.add(new Dot(getPoints().get(i), getPoints().get(i + 1)));
         }
-    }
-
-    public void setDots(Dot... dots) {
-        int count = 0;
-        for (Dot dot : dots) {
-            getPoints().set(count++, dot.getX());
-            getPoints().set(count++, dot.getY());
-        }
+        return dots;
     }
 
     public void setDots(List<Dot> dots) {
@@ -35,14 +29,6 @@ public class Shape extends Polyline {
             getPoints().set(count + 1, dot.getY());
             count += 2;
         }
-    }
-
-    public List<Dot> getDots() {
-        ArrayList<Dot> dots = new ArrayList<>();
-        for (int i = 0; i < getPoints().size(); i += 2) {
-            dots.add(new Dot(getPoints().get(i), getPoints().get(i + 1)));
-        }
-        return dots;
     }
 
     public void rotate(double x, double y, double degrees) {
@@ -73,23 +59,25 @@ public class Shape extends Polyline {
             double x0 = dot.getX();
             double y0 = dot.getY();
 
-            dot.setX((x * w + xx * wx * x0 + xy * wy * y0) / (w + wx * x0 + wy * y0));
-            dot.setY((y * w + yx * wx * x0 + yy * wy * y0) / (w + wx * x0 + wy * y0));
+            double W = w + wx * x0 + wy * y0;
+
+            dot.setX((x * w + xx * wx * x0 + xy * wy * y0) / W);
+            dot.setY((y * w + yx * wx * x0 + yy * wy * y0) / W);
+
         }
         setDots(dots);
     }
 
 
-    public void afinnis(double xx, double xy, double yx, double yy, double dx, double dy) {
+    public void affinis(double xx, double xy, double yx, double yy, double dx, double dy) {
         List<Dot> dots = getDots();
         for (Dot dot : dots) {
 
             double x = dot.getX();
             double y = dot.getY();
 
-            dot.setX(x * xx + y * xy + x);
-            dot.setY(x * yx + y * yy + y);
-
+            dot.setX(x * xx + y * xy + x + dx);
+            dot.setY(x * yx + y * yy + y + dy);
         }
         setDots(dots);
     }

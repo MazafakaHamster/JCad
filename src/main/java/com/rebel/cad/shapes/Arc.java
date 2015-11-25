@@ -5,7 +5,7 @@ import com.rebel.cad.collections.ShapeGroup;
 /**
  * Created by Slava on 05.11.2015.
  */
-public class Arc extends Shape {
+public class Arc extends TPolyline {
     protected double centerX;
     protected double centerY;
     protected double radius;

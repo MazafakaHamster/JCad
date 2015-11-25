@@ -1,120 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
+<?import com.rebel.cad.collections.ShapeGroup?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.rebel.cad.collections.ShapeGroup?>
-
+<?import javafx.scene.text.Font?>
 <VBox fx:id="rootBox" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController">
-   <children>
-      <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
-         <children>
-            <Button fx:id="drawButton" mnemonicParsing="false" onAction="#draw" prefHeight="34.0" prefWidth="52.0" text="Draw">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="eraseButton" mnemonicParsing="false" onAction="#erase" prefHeight="34.0" prefWidth="72.0" text="Erase" />
-            <Button mnemonicParsing="false" onAction="#rebuild" prefHeight="34.0" prefWidth="71.0" text="Rebuild" />
-            <TextField fx:id="stepField" prefHeight="25.0" prefWidth="94.0" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <padding>
-            <Insets left="20.0" />
-         </padding>
-      </HBox>
-      <HBox>
-         <children>
-            <Pane fx:id="groupPane">
-               <children>
-                  <ShapeGroup fx:id="figure" autoSizeChildren="false" />
-               </children>
-            </Pane>
-            <Accordion>
-              <panes>
-                <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="Euclid">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+    <children>
+        <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
+            <children>
+                <Button fx:id="drawButton" mnemonicParsing="false" onAction="#draw" prefHeight="34.0" prefWidth="52.0" text="Draw">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="eraseButton" mnemonicParsing="false" onAction="#erase" prefHeight="34.0" prefWidth="72.0" text="Erase" />
+                <Button mnemonicParsing="false" onAction="#rebuild" prefHeight="34.0" prefWidth="71.0" text="Rebuild" />
+                <TextField fx:id="stepField" prefHeight="25.0" prefWidth="94.0" />
+            </children>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <padding>
+                <Insets left="20.0" />
+            </padding>
+        </HBox>
+        <HBox>
+            <children>
+                <Pane fx:id="groupPane">
+                    <children>
+                        <ShapeGroup fx:id="figure" autoSizeChildren="false" />
+                    </children>
+                </Pane>
+                <Accordion>
+                    <panes>
+                        <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="Euclid">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <VBox alignment="TOP_CENTER" minWidth="180.0" prefHeight="180.0" prefWidth="180.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="5.0">
+                                                    <children>
+                                                        <Label text="Degrees" />
+                                                        <TextField fx:id="rotateField" prefHeight="25.0" prefWidth="105.0" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" spacing="5.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#rotate" prefHeight="25.0" prefWidth="71.0" text="Rotate" />
+                                                        <Button mnemonicParsing="false" onAction="#rotateWithAxis" prefHeight="25.0" prefWidth="79.0" text="Rotate Axis" />
+                                                    </children>
+                                                </HBox>
+                                                <Separator prefHeight="4.0" prefWidth="171.0" />
+                                                <HBox alignment="CENTER" prefHeight="30.0" prefWidth="159.0" spacing="5.0">
+                                                    <children>
+                                                        <Label text="delta X" />
+                                                        <TextField fx:id="deltaX" prefHeight="25.0" prefWidth="100.0" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" prefHeight="30.0" prefWidth="159.0" spacing="5.0">
+                                                    <children>
+                                                        <Label text="delta Y" />
+                                                        <TextField fx:id="deltaY" prefHeight="25.0" prefWidth="100.0" />
+                                                    </children>
+                                                </HBox>
+                                                <Button mnemonicParsing="false" onAction="#move" prefHeight="25.0" prefWidth="152.0" text="Move" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </TitledPane>
+                        <TitledPane minWidth="180.0" prefWidth="180.0" text="Affinis">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" minWidth="180.0" prefHeight="180.0" prefWidth="180.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <VBox alignment="TOP_CENTER" prefHeight="180.0" prefWidth="178.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <HBox alignment="CENTER" spacing="5.0">
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
                                        <children>
-                                          <Label text="Degrees" />
-                                          <TextField fx:id="rotateField" prefHeight="25.0" prefWidth="105.0" />
+                                          <Label text="Xx:" />
+                                          <TextField fx:id="affXX" prefHeight="25.0" prefWidth="122.0" />
+                                       </children></HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Xy:" />
+                                          <TextField fx:id="affXY" prefHeight="25.0" prefWidth="122.0" />
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER" spacing="5.0">
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
                                        <children>
-                                          <Button mnemonicParsing="false" onAction="#rotate" prefHeight="25.0" prefWidth="71.0" text="Rotate" />
-                                          <Button mnemonicParsing="false" onAction="#rotateWithAxis" prefHeight="25.0" prefWidth="79.0" text="Rotate Axis" />
+                                          <Label text="Yx:" />
+                                          <TextField fx:id="affYX" prefHeight="25.0" prefWidth="122.0" />
                                        </children>
                                     </HBox>
-                                    <Separator prefHeight="4.0" prefWidth="171.0" />
-                                    <HBox alignment="CENTER" prefHeight="30.0" prefWidth="159.0" spacing="5.0">
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
                                        <children>
-                                          <Label text="delta X" />
-                                          <TextField fx:id="deltaX" prefHeight="25.0" prefWidth="100.0" />
+                                          <Label text="Yy:" />
+                                          <TextField fx:id="affYY" prefHeight="25.0" prefWidth="122.0" />
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER" prefHeight="30.0" prefWidth="159.0" spacing="5.0">
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
                                        <children>
-                                          <Label text="delta Y" />
-                                          <TextField fx:id="deltaY" prefHeight="25.0" prefWidth="100.0" />
+                                          <Label text="dX:" />
+                                          <TextField fx:id="affDX" prefHeight="25.0" prefWidth="122.0" />
                                        </children>
                                     </HBox>
-                                    <Button mnemonicParsing="false" onAction="#move" prefHeight="25.0" prefWidth="152.0" text="Move" />
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="dY:" />
+                                          <TextField fx:id="affDY" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#affinis" text="Transform" />
                                  </children>
                               </VBox>
                            </children></AnchorPane>
-                  </content>
-                </TitledPane>
-                <TitledPane disable="true" minWidth="180.0" prefWidth="180.0" text="In Development">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
-                </TitledPane>
-                <TitledPane disable="true" minWidth="180.0" prefWidth="180.0" text="In Development">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
-                </TitledPane>
-              </panes>
-            </Accordion>
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="46.0" prefWidth="800.0" spacing="15.0" style="-fx-background-color: #EEEEEE;">
-         <children>
-            <Label text="X:">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label text="-" fx:id="xCoord">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label text="Y:">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="yCoord" text="-">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children>
-         <padding>
-            <Insets left="20.0" top="6.0" />
-         </padding>
-      </HBox>
-   </children>
+                            </content>
+                        </TitledPane>
+                        <TitledPane minWidth="180.0" prefWidth="180.0" text="Projective">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="180.0" prefWidth="178.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Xx:" />
+                                          <TextField fx:id="projXX" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Xy:" />
+                                          <TextField fx:id="projXY" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Xw:" />
+                                          <TextField fx:id="projXW" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Yx:" />
+                                          <TextField fx:id="projYX" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Yy:" />
+                                          <TextField fx:id="projYY" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Yw:" />
+                                          <TextField fx:id="projYW" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="X:" />
+                                          <TextField fx:id="projX" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Y:" />
+                                          <TextField fx:id="projY" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="W:" />
+                                          <TextField fx:id="projW" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#project" text="Transform" />
+                                 </children>
+                              </VBox>
+                           </children></AnchorPane>
+                            </content>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="46.0" prefWidth="800.0" spacing="15.0" style="-fx-background-color: #EEEEEE;">
+            <children>
+                <Label text="X:">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label text="-" fx:id="xCoord">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label text="Y:">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label fx:id="yCoord" text="-">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+            </children>
+            <padding>
+                <Insets left="20.0" top="6.0" />
+            </padding>
+        </HBox>
+    </children>
 </VBox>
