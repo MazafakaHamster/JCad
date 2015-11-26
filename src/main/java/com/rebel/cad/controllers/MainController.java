@@ -80,8 +80,8 @@ public class MainController extends Controller implements Initializable {
 
     private int step = 20;
 
-    private double width = MainApp.INITIAL_WIDTH;
-    private double height = MainApp.INITIAL_HEIGHT;
+    private static double width = MainApp.INITIAL_WIDTH;
+    private static double height = MainApp.INITIAL_HEIGHT;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -113,8 +113,8 @@ public class MainController extends Controller implements Initializable {
             resize();
         });
 
-        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
-        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
+//        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+//        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -153,32 +153,32 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void erase() {
-//        dotsList.add(rotationPoint);
-//        groupPane.getChildren().removeAll(dotsList);
-//        dotsList.clear();
-//        dotCount = 0;
-//        figure.getChildren().removeAll(figure.getChildren());
-//        figure.getChildren().clear();
-        figure.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
-        axises.project(width, height / 2, 0.01, width / 2, height, 0.01, width/2, height/2, 0.01);
-        grid.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
-        clip();
+        dotsList.add(rotationPoint);
+        groupPane.getChildren().removeAll(dotsList);
+        dotsList.clear();
+        dotCount = 0;
+        figure.getChildren().removeAll(figure.getChildren());
+        figure.getChildren().clear();
+//        figure.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
+//        axises.project(width, height / 2, 0.01, width / 2, height, 0.01, width/2, height/2, 0.01);
+//        grid.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
+//        clip();
 
     }
 
-    private double toRealX(double x) {
+    public static double toRealX(double x) {
         return x + width / 2 - 90;
     }
 
-    private double toFakeX(double x) {
+    public static double toFakeX(double x) {
         return x - width / 2 + 90;
     }
 
-    private double toRealY(double y) {
+    public static double toRealY(double y) {
         return -y + height / 2;
     }
 
-    private double toFakeY(double y) {
+    public static double toFakeY(double y) {
         return -(y - height / 2);
     }
 
@@ -220,14 +220,14 @@ public class MainController extends Controller implements Initializable {
         figure.getChildren().add(new Line(x, y, dotOnFirstCircle.getX(), dotOnFirstCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
         figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Shaper.Axis.Horizontal));
+        figure.getChildren().add(new Arc(x, y, radius2, 111, 282, Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
         figure.getChildren().add(new Line(x, y, dotOnLastCircle.getX(), dotOnLastCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
         figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Shaper.Axis.Horizontal));
+        figure.getChildren().add(new Arc(x, y, radius2, 258, 68, Axis.Horizontal));
 
         figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
         figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
@@ -261,7 +261,7 @@ public class MainController extends Controller implements Initializable {
             HintedDot dot = new HintedDot(event.getX(), event.getY(), dotCount++);
             dot.setTooltip(fx, fy);
             dotsList.add(dot);
-            groupPane.getChildren().add(dot);
+            figure.getChildren().add(dot);
             drawFigure(dotsList);
             groupPane.setOnMouseClicked(null);
         });
@@ -285,8 +285,8 @@ public class MainController extends Controller implements Initializable {
 
         figure.getChildren().clear();
 
-        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
-        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
+//        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+//        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
         figure.setScaleX(step / prevStep);
         figure.setScaleY(step / prevStep);
     }
@@ -360,7 +360,6 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void project() {
-        rebuild();
         double xx = Double.parseDouble(projXX.getText());
         double xy = Double.parseDouble(projXY.getText());
         double xw = Double.parseDouble(projXW.getText());
@@ -371,9 +370,9 @@ public class MainController extends Controller implements Initializable {
         double y = Double.parseDouble(projY.getText());
         double w = Double.parseDouble(projW.getText());
 
-        figure.project(xx, xy, xw, yx, yy, yw, toRealX(x), toRealY(y), w);
-        axises.project(xx, xy, xw, yx, yy, yw, toRealX(x), toRealY(y), w);
-        grid.project(xx, xy, xw, yx, yy, yw, toRealX(x), toRealY(y), w);
+        figure.project(xx, xy, xw, yx, yy, yw, x, y, w);
+        axises.project(xx, xy, xw, yx, yy, yw, x, y, w);
+        grid.project(xx, xy, xw, yx, yy, yw, x, y, w);
         clip();
     }
 }

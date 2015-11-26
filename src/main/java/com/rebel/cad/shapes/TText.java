@@ -1,5 +1,6 @@
 package com.rebel.cad.shapes;
 
+import com.rebel.cad.controllers.MainController;
 import javafx.scene.text.Text;
 
 /**
@@ -36,10 +37,10 @@ public class TText extends Text implements Transformable {
     }
 
     public void affinis(double xx, double xy, double yx, double yy, double dx, double dy) {
-        double x = getX();
-        double y = getY();
+        double x = MainController.toFakeX(getX());
+        double y = MainController.toFakeY(getY());
 
-        setX(x * xx + y * xy + x + dx);
-        setY(x * yx + y * yy + y + dy);
+        setX(MainController.toRealX(x * xx + y * xy + x + dx));
+        setY(MainController.toRealY(x * yx + y * yy + y + dy));
     }
 }

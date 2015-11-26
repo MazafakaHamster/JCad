@@ -1,5 +1,6 @@
 package com.rebel.cad.shapes;
 
+import com.rebel.cad.controllers.MainController;
 import javafx.scene.shape.Polyline;
 
 import java.util.ArrayList;
@@ -56,13 +57,13 @@ public class TPolyline extends Polyline implements Transformable {
     public void project(double xx, double xy, double wx, double yx, double yy, double wy, double x, double y, double w) {
         List<Dot> dots = getDots();
         for (Dot dot : dots) {
-            double x0 = dot.getX();
-            double y0 = dot.getY();
+            double x0 = MainController.toFakeX(dot.getX());
+            double y0 = MainController.toFakeY(dot.getY());
 
             double W = w + wx * x0 + wy * y0;
 
-            dot.setX((x * w + xx * wx * x0 + xy * wy * y0) / W);
-            dot.setY((y * w + yx * wx * x0 + yy * wy * y0) / W);
+            dot.setX(MainController.toRealX((x * w + xx * wx * x0 + xy * wy * y0) / W));
+            dot.setY(MainController.toRealY((y * w + yx * wx * x0 + yy * wy * y0) / W));
 
         }
         setDots(dots);
@@ -73,11 +74,11 @@ public class TPolyline extends Polyline implements Transformable {
         List<Dot> dots = getDots();
         for (Dot dot : dots) {
 
-            double x = dot.getX();
-            double y = dot.getY();
+            double x = MainController.toFakeX(dot.getX());
+            double y = MainController.toFakeY(dot.getY());
 
-            dot.setX(x * xx + y * xy + x + dx);
-            dot.setY(x * yx + y * yy + y + dy);
+            dot.setX(MainController.toRealX(x * xx + y * xy + x + dx));
+            dot.setY(MainController.toRealY(x * yx + y * yy + y + dy));
         }
         setDots(dots);
     }
