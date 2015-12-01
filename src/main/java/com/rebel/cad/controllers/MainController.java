@@ -119,6 +119,8 @@ public class MainController extends Controller implements Initializable {
             resize();
         });
 
+
+        figure.getChildren().add(new SuperEllipse(toRealX(0), toRealY(0), 50, 50, 0.5));
 //        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
 //        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
     }
