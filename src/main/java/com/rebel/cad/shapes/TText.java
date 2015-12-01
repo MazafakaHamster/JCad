@@ -29,11 +29,12 @@ public class TText extends Text implements Transformable {
 
 
     public void project(double xx, double xy, double wx, double yx, double yy, double wy, double x, double y, double w) {
-        double x0 = getX();
-        double y0 = getY();
+        double x0 = MainController.toFakeX(getX());
+        double y0 = MainController.toFakeY(getY());
 
-        setX(x0 + (x * w + xx * wx * x0 + xy * wy * y0) / (w + wx * x0 + wy * y0));
-        setY(y0 + (y * w + yx * wx * x0 + yy * wy * y0) / (w + wx * x0 + wy * y0));
+        double W = w + wx * x0 + wy * y0;
+        setX(MainController.toRealX((x0 + (x * w + xx * wx * x0 + xy * wy * y0) / W)));
+        setY(MainController.toRealY((y0 + (y * w + yx * wx * x0 + yy * wy * y0) / W)));
     }
 
     public void affinis(double xx, double xy, double yx, double yy, double dx, double dy) {

@@ -6,16 +6,22 @@ import com.rebel.cad.shapes.*;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class MainController extends Controller implements Initializable {
 
@@ -183,20 +189,15 @@ public class MainController extends Controller implements Initializable {
     }
 
     private void drawFigure(List<HintedDot> dots) {
-        HintedDot centerDot = dots.get(dotCount - 1);
-        double figureHeight = askParam("Enter height");
-        double radius = askParam("Enter radius for bottom circles, less than: " + Math.round(figureHeight / 12));
-        if (radius > figureHeight / 12) {
-            showError("Radius is too big");
-            erase();
-            return;
-        }
+        HintedDot centerDot = new HintedDot(toRealX(0), toRealY(0), 0);
+        double figureHeight = 400;
+        double radius = 30;
         double y = centerDot.getCenterY() + figureHeight / 2 - radius;
         double x = centerDot.getCenterX() - figureHeight / 3;
         Dot dotOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
         Dot dotOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
-            figure.getChildren().add(new Circle(x, y, radius, Axis.Both));
+            figure.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
         }
 
@@ -209,25 +210,25 @@ public class MainController extends Controller implements Initializable {
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
-        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350, Axis.Both));
+        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
         Dot topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
         Dot topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 
-        double radius2 = askParam("Enter radius for central circles");
+        double radius2 = 60;
         y = centerDot.getCenterY();
         x = centerDot.getCenterX() - figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
         figure.getChildren().add(new Line(x, y, dotOnFirstCircle.getX(), dotOnFirstCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
         figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 111, 282, Axis.Horizontal));
+        figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
         figure.getChildren().add(new Line(x, y, dotOnLastCircle.getX(), dotOnLastCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
         figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 258, 68, Axis.Horizontal));
+        figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
 
         figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
         figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
@@ -239,6 +240,60 @@ public class MainController extends Controller implements Initializable {
         verAx.getStrokeDashArray().addAll(10d);
         figure.getChildren().add(verAx);
         clip();
+    }
+
+    @FXML
+    private void quickDraw() {
+        HintedDot centerDot = new HintedDot(toRealX(0), toRealY(0), 0);
+        double figureHeight = 400;
+        double radius = 30;
+        double y = centerDot.getCenterY() + figureHeight / 2 - radius;
+        double x = centerDot.getCenterX() - figureHeight / 3;
+        Dot dotOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
+        Dot dotOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
+        for (int i = 0; i < 5; i++) {
+            figure.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
+            x += figureHeight / 6;
+        }
+
+        Dot leftSecond = new Dot(centerDot.getCenterX() - figureHeight / 6 - radius, y);
+        Dot rightSecond = new Dot(centerDot.getCenterX() - figureHeight / 6 + radius, y);
+        Dot leftThird = new Dot(centerDot.getCenterX() - radius, y);
+        Dot rightThird = new Dot(centerDot.getCenterX() + radius, y);
+        Dot leftFourth = new Dot(centerDot.getCenterX() + figureHeight / 6 - radius, y);
+        Dot rightFourth = new Dot(centerDot.getCenterX() + figureHeight / 6 + radius, y);
+
+        x = centerDot.getCenterX();
+        y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
+        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
+        Dot topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
+        Dot topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
+
+        double radius2 = 60;
+        y = centerDot.getCenterY();
+        x = centerDot.getCenterX() - figureHeight / 6;
+        figure.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
+        figure.getChildren().add(new Line(x, y, dotOnFirstCircle.getX(), dotOnFirstCircle.getY()));
+        figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
+        figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
+        figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
+
+        x = centerDot.getCenterX() + figureHeight / 6;
+        figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
+        figure.getChildren().add(new Line(x, y, dotOnLastCircle.getX(), dotOnLastCircle.getY()));
+        figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
+        figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
+        figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
+
+        figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
+        figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
+
+        Line horAx = new Line(centerDot.getCenterX() - figureHeight / 4, centerDot.getCenterY(), centerDot.getCenterX() + figureHeight / 4, centerDot.getCenterY());
+        horAx.getStrokeDashArray().addAll(10d);
+        figure.getChildren().add(horAx);
+        Line verAx = new Line(centerDot.getCenterX(), centerDot.getCenterY() - figureHeight / 1.8, centerDot.getCenterX(), centerDot.getCenterY() + figureHeight / 1.8);
+        verAx.getStrokeDashArray().addAll(10d);
+        figure.getChildren().add(verAx);
     }
 
     private void clip() {
@@ -374,5 +429,20 @@ public class MainController extends Controller implements Initializable {
         axises.project(xx, xy, xw, yx, yy, yw, x, y, w);
         grid.project(xx, xy, xw, yx, yy, yw, x, y, w);
         clip();
+    }
+
+    @FXML
+    private void showImage() {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(MainApp.getMainStage());
+        Pane pane = new Pane();
+        Image image = new Image(getClass().getResourceAsStream("/figure.png"));
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        pane.getChildren().add(imageView);
+        Scene dialogScene = new Scene(pane, 450, 450);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 }

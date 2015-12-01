@@ -64,9 +64,9 @@ public class TPolyline extends Polyline implements Transformable {
 
             dot.setX(MainController.toRealX((x * w + xx * wx * x0 + xy * wy * y0) / W));
             dot.setY(MainController.toRealY((y * w + yx * wx * x0 + yy * wy * y0) / W));
-
         }
         setDots(dots);
+        System.out.println(this);
     }
 
 
