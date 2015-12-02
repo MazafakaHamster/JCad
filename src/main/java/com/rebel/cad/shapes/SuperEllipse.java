@@ -20,12 +20,12 @@ public class SuperEllipse extends TPolyline {
         this.n = n;
 
         ArrayList<Dot> dots = new ArrayList<>();
-        for (int i = 0; i < 360; i += 1) {
+        for (int i = 0; i <= 360; i += 1) {
             double rad = Math.toRadians(i);
             double cos = Math.cos(rad);
             double sin = Math.sin(rad);
-            double x = a * Math.pow(cos, n) + centerX;
-            double y = b * Math.pow(sin, n) + centerY;
+            double x = a * Math.pow(Math.abs(cos), 2/n) * Math.signum(cos) + centerX;
+            double y = b * Math.pow(Math.abs(sin), 2/n) * Math.signum(sin) + centerY;
             dots.add(new Dot(x, y));
         }
         addPoints(dots);

@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
+<?import com.rebel.cad.collections.ShapeGroup?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.Group?>
-
-<?import com.rebel.cad.collections.ShapeGroup?>
 <VBox fx:id="rootBox" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController">
     <children>
         <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
@@ -199,6 +194,49 @@
                            </children></AnchorPane>
                             </content>
                         </TitledPane>
+                  <TitledPane minWidth="180.0" prefWidth="180.0" text="Super Ellipse">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="180.0" prefWidth="178.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="X:" />
+                                          <TextField fx:id="ellipseX" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Y:" />
+                                          <TextField fx:id="ellipseY" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="A:" />
+                                          <TextField fx:id="ellipseA" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="B:" />
+                                          <TextField fx:id="ellipseB" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="N:" />
+                                          <TextField fx:id="ellipseN" prefHeight="25.0" prefWidth="122.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#buildEllipse" text="Build" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
                     </panes>
                 </Accordion>
             </children>

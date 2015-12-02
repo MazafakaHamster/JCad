@@ -24,11 +24,9 @@ public class TPolyline extends Polyline implements Transformable {
     }
 
     public void addPoints(List<Dot> dots) {
-        int count = 0;
         for (Dot dot : dots) {
-            getPoints().add(count, dot.getX());
-            getPoints().add(count + 1, dot.getY());
-            count += 2;
+            getPoints().add(dot.getX());
+            getPoints().add(dot.getY());
         }
     }
 

@@ -21,17 +21,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 public class MainController extends Controller implements Initializable {
 
     private static int dotCount;
+    private static double width = MainApp.INITIAL_WIDTH;
+    private static double height = MainApp.INITIAL_HEIGHT;
     private ArrayList<HintedDot> dotsList = new ArrayList<>();
     private HintedDot rotationPoint;
     @FXML
     private ShapeGroup figure;
-
-
     @FXML
     private VBox rootBox;
     @FXML
@@ -48,7 +47,6 @@ public class MainController extends Controller implements Initializable {
     private TextField deltaX;
     @FXML
     private TextField deltaY;
-
     @FXML
     private TextField affXX;
     @FXML
@@ -61,7 +59,6 @@ public class MainController extends Controller implements Initializable {
     private TextField affDX;
     @FXML
     private TextField affDY;
-
     @FXML
     private TextField projXX;
     @FXML
@@ -80,14 +77,35 @@ public class MainController extends Controller implements Initializable {
     private TextField projY;
     @FXML
     private TextField projW;
-
+    @FXML
+    private TextField ellipseX;
+    @FXML
+    private TextField ellipseY;
+    @FXML
+    private TextField ellipseA;
+    @FXML
+    private TextField ellipseB;
+    @FXML
+    private TextField ellipseN;
     private ShapeGroup grid;
     private ShapeGroup axises;
-
     private int step = 20;
 
-    private static double width = MainApp.INITIAL_WIDTH;
-    private static double height = MainApp.INITIAL_HEIGHT;
+    public static double toRealX(double x) {
+        return x + width / 2 - 90;
+    }
+
+    public static double toFakeX(double x) {
+        return x - width / 2 + 90;
+    }
+
+    public static double toRealY(double y) {
+        return -y + height / 2;
+    }
+
+    public static double toFakeY(double y) {
+        return -(y - height / 2);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -118,11 +136,6 @@ public class MainController extends Controller implements Initializable {
                 figure.move(0, delta / 2);
             resize();
         });
-
-
-        figure.getChildren().add(new SuperEllipse(toRealX(0), toRealY(0), 50, 50, 0.5));
-//        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
-//        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -174,24 +187,8 @@ public class MainController extends Controller implements Initializable {
 
     }
 
-    public static double toRealX(double x) {
-        return x + width / 2 - 90;
-    }
-
-    public static double toFakeX(double x) {
-        return x - width / 2 + 90;
-    }
-
-    public static double toRealY(double y) {
-        return -y + height / 2;
-    }
-
-    public static double toFakeY(double y) {
-        return -(y - height / 2);
-    }
-
     private void drawFigure(List<HintedDot> dots) {
-        HintedDot centerDot = new HintedDot(toRealX(0), toRealY(0), 0);
+        HintedDot centerDot = dots.get(0);
         double figureHeight = 400;
         double radius = 30;
         double y = centerDot.getCenterY() + figureHeight / 2 - radius;
@@ -446,5 +443,17 @@ public class MainController extends Controller implements Initializable {
         Scene dialogScene = new Scene(pane, 450, 450);
         dialog.setScene(dialogScene);
         dialog.show();
+    }
+
+    @FXML
+    private void buildEllipse() {
+        double x = Double.parseDouble(ellipseX.getText());
+        double y = Double.parseDouble(ellipseY.getText());
+        double a = Double.parseDouble(ellipseA.getText());
+        double b = Double.parseDouble(ellipseB.getText());
+        double n = Double.parseDouble(ellipseN.getText());
+
+        SuperEllipse superEllipse = new SuperEllipse(toRealX(x), toRealY(y), a, b, n);
+        figure.getChildren().add(superEllipse);
     }
 }
