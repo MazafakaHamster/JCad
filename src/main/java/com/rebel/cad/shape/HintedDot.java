@@ -1,4 +1,4 @@
-package com.rebel.cad.shapes;
+package com.rebel.cad.shape;
 
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;

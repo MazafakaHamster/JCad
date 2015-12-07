@@ -1,8 +1,6 @@
 package com.rebel.cad.util;
 
-import com.rebel.cad.shapes.Dot;
-
-import java.util.Arrays;
+import com.rebel.cad.shape.Dot;
 
 /**
  * Created by Slava on 22.09.2015.

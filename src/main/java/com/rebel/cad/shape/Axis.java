@@ -1,4 +1,4 @@
-package com.rebel.cad.shapes;
+package com.rebel.cad.shape;
 
 /**
  * Created by Slava on 11.11.2015.

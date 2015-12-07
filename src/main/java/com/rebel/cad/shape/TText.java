@@ -1,4 +1,4 @@
-package com.rebel.cad.shapes;
+package com.rebel.cad.shape;
 
 import com.rebel.cad.controllers.MainController;
 import javafx.scene.text.Text;

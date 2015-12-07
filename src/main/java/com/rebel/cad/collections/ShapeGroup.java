@@ -1,6 +1,6 @@
 package com.rebel.cad.collections;
 
-import com.rebel.cad.shapes.Transformable;
+import com.rebel.cad.shape.Transformable;
 import javafx.scene.Group;
 import javafx.scene.Node;
 

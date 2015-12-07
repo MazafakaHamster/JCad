@@ -2,7 +2,7 @@ package com.rebel.cad.controllers;
 
 import com.rebel.cad.MainApp;
 import com.rebel.cad.collections.ShapeGroup;
-import com.rebel.cad.shapes.*;
+import com.rebel.cad.shape.*;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -454,6 +454,11 @@ public class MainController extends Controller implements Initializable {
         double n = Double.parseDouble(ellipseN.getText());
 
         SuperEllipse superEllipse = new SuperEllipse(toRealX(x), toRealY(y), a, b, n);
+        superEllipse.setOnMouseClicked(event -> {
+            double clickX = event.getX();
+            double clickY = event.getY();
+            System.out.println(toFakeX(clickX) + " " + toFakeY(clickY));
+        });
         figure.getChildren().add(superEllipse);
     }
 }
