@@ -1,5 +1,8 @@
 package com.rebel.cad.shape;
 
+import com.rebel.cad.controllers.MainController;
+import sun.applet.Main;
+
 import java.util.ArrayList;
 
 /**
@@ -31,9 +34,12 @@ public class SuperEllipse extends TPolyline {
         addPoints(dots);
     }
 
-    public double derivative(double x0, double y0) {
-        return (-b * b * x0 * Math.pow(Math.abs(x0 / a), n - 2)) / (a * a * y0 * Math.pow(Math.abs(y0 / b), n - 2));
-        //return ((b * x0 *  Math.Pow(Math.Abs(x0 / a), n - 2) * Math.Pow(1 - Math.Pow(Math.Abs(x0 / a), n), 1 / n)) / (a * a * (Math.Pow(Math.Abs(x0 / a), n) - 1)));
+    public double derivative(double x, double y) {
+        return (b * b * x * Math.pow(Math.abs(x / a), n - 2)) / (a * a * y * Math.pow(Math.abs(y / b), n - 2));
+    }
+
+    public double function(double x) {
+        return - b * Math.pow(1 - Math.pow(Math.abs(x / a), n), 1 / n);
     }
 
     public double getCenterX() {
