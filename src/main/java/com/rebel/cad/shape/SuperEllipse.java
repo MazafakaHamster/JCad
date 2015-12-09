@@ -24,11 +24,16 @@ public class SuperEllipse extends TPolyline {
             double rad = Math.toRadians(i);
             double cos = Math.cos(rad);
             double sin = Math.sin(rad);
-            double x = a * Math.pow(Math.abs(cos), 2/n) * Math.signum(cos) + centerX;
-            double y = b * Math.pow(Math.abs(sin), 2/n) * Math.signum(sin) + centerY;
+            double x = a * Math.pow(Math.abs(cos), 2 / n) * Math.signum(cos) + centerX;
+            double y = b * Math.pow(Math.abs(sin), 2 / n) * Math.signum(sin) + centerY;
             dots.add(new Dot(x, y));
         }
         addPoints(dots);
+    }
+
+    public double derivative(double x0, double y0) {
+        return (-b * b * x0 * Math.pow(Math.abs(x0 / a), n - 2)) / (a * a * y0 * Math.pow(Math.abs(y0 / b), n - 2));
+        //return ((b * x0 *  Math.Pow(Math.Abs(x0 / a), n - 2) * Math.Pow(1 - Math.Pow(Math.Abs(x0 / a), n), 1 / n)) / (a * a * (Math.Pow(Math.Abs(x0 / a), n) - 1)));
     }
 
     public double getCenterX() {
