@@ -35,11 +35,11 @@ public class SuperEllipse extends TPolyline {
     }
 
     public double derivative(double x, double y) {
-        return (b * b * x * Math.pow(Math.abs(x / a), n - 2)) / (a * a * y * Math.pow(Math.abs(y / b), n - 2));
+        return (b * b * MainController.toFakeX(x) * Math.pow(Math.abs(MainController.toFakeX(x) / a), n - 2)) / (a * a * MainController.toFakeY(y) * Math.pow(Math.abs(MainController.toFakeY(y) / b), n - 2));
     }
 
     public double function(double x) {
-        return - b * Math.pow(1 - Math.pow(Math.abs(x / a), n), 1 / n);
+        return b * Math.pow(1 - Math.pow(Math.abs(MainController.toFakeX(x) / a), n), 1 / n);
     }
 
     public double getCenterX() {

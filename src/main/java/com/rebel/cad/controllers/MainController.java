@@ -3,6 +3,7 @@ package com.rebel.cad.controllers;
 import com.rebel.cad.MainApp;
 import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.shape.*;
+import com.rebel.cad.shape.impl.SuperEllipseNormal;
 import com.rebel.cad.shape.impl.SuperEllipseTangent;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
@@ -137,15 +138,6 @@ public class MainController extends Controller implements Initializable {
                 figure.move(0, delta / 2);
             resize();
         });
-
-        SuperEllipse superEllipse = new SuperEllipse(toRealX(0), toRealY(0), 200, 200, 3);
-        figure.getChildren().addAll(superEllipse);
-        superEllipse.setOnMouseClicked(event -> {
-            double clickX = event.getX();
-            double clickY = event.getY();
-            figure.getChildren().addAll(new SuperEllipseTangent(superEllipse, clickX, clickY, 200));
-        });
-
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -310,13 +302,13 @@ public class MainController extends Controller implements Initializable {
         axises.setClip(new Rectangle(0, 0, width - 180, height));
         grid.setClip(new Rectangle(0, 0, width - 180, height));
 
-    }
+        }
 
-    @FXML
-    private void draw() {
-        showInform("Center point", "Place center point on the plane");
-        createDot();
-    }
+        @FXML
+        private void draw() {
+            showInform("Center point", "Place center point on the plane");
+            createDot();
+        }
 
     private void createDot() {
         groupPane.setOnMouseClicked(event -> {
@@ -464,11 +456,13 @@ public class MainController extends Controller implements Initializable {
         double n = Double.parseDouble(ellipseN.getText());
 
         SuperEllipse superEllipse = new SuperEllipse(toRealX(x), toRealY(y), a, b, n);
-//        superEllipse.setOnMouseClicked(event -> {
-//            double clickX = event.getX();
-//            double clickY = event.getY();
-//            superEllipse.buildTangent(clickX, clickY);
-//        });
+        figure.getChildren().addAll(superEllipse);
+        superEllipse.setOnMouseClicked(event -> {
+            double clickX = event.getX();
+            double clickY = event.getY();
+            figure.getChildren().addAll(new SuperEllipseTangent(superEllipse, clickX, clickY));
+            figure.getChildren().addAll(new SuperEllipseNormal(superEllipse, clickX, clickY));
+        });
         figure.getChildren().add(superEllipse);
     }
 }
