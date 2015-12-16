@@ -14,13 +14,13 @@ public class WeightPoint extends Point {
     public WeightPoint(double x, double y, double weight) {
         super(x, y);
         this.weight = weight;
-        circle = new Circle(x, y, 3, Color.BLUE);
-        circle.setOnMouseClicked(event -> {
-            circle.setFill(Color.RED);
-            setX(getX() + 5);
-            setY(getY() + 5);
-        });
+        circle = new Circle(x, y, 7, Color.BLUE);
+        circle.setOpacity(0.6);
         MainController.staticFigure.getChildren().add(circle);
+    }
+
+    protected Circle getCircle() {
+        return circle;
     }
 
     public double getWeight() {
@@ -29,7 +29,5 @@ public class WeightPoint extends Point {
 
     public void setWeight(double weight) {
         this.weight = weight;
-        if (listener != null)
-            listener.valueChanged(this);
     }
 }

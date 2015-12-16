@@ -3,6 +3,7 @@ package com.rebel.cad.controllers;
 import com.rebel.cad.MainApp;
 import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.shape.*;
+import com.rebel.cad.shape.BoundLine;
 import com.rebel.cad.shape.impl.SuperEllipseNormal;
 import com.rebel.cad.shape.impl.SuperEllipseTangent;
 import com.rebel.cad.util.Helper;
@@ -147,12 +148,21 @@ public class MainController extends Controller implements Initializable {
         });
         staticFigure = figure;
 
-        WeightPoint a = new WeightPoint(toRealX(0), toRealY(0), 1);
-        WeightPoint b = new WeightPoint(toRealX(40), toRealY(60), 1);
-        WeightPoint c = new WeightPoint(toRealX(80), toRealY(20), 1);
-        WeightPoint d = new WeightPoint(toRealX(100), toRealY(0), 1);
+        DraggableWeightPoint a = new DraggableWeightPoint(toRealX(0), toRealY(0), 1);
+        DraggableWeightPoint b = new DraggableWeightPoint(toRealX(40), toRealY(40), 1);
+        DraggableWeightPoint c = new DraggableWeightPoint(toRealX(60), toRealY(-40), 1);
+        DraggableWeightPoint d = new DraggableWeightPoint(toRealX(100), toRealY(0), 1);
+
+        DraggableWeightPoint e = new DraggableWeightPoint(toRealX(140), toRealY(40), 1);
+        DraggableWeightPoint f = new DraggableWeightPoint(toRealX(160), toRealY(40), 1);
+        DraggableWeightPoint g = new DraggableWeightPoint(toRealX(200), toRealY(-40), 1);
 
         figure.getChildren().add(new Curve(a, b, c, d));
+        figure.getChildren().add(new Curve(d, e, f, g));
+        figure.getChildren().addAll(new BoundLine(a, b));
+        figure.getChildren().addAll(new BoundLine(d, c));
+        figure.getChildren().addAll(new BoundLine(d, e));
+        figure.getChildren().addAll(new BoundLine(f, g));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {

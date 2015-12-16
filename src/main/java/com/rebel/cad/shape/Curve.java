@@ -1,6 +1,6 @@
 package com.rebel.cad.shape;
 
-import com.rebel.cad.listeners.ValueChangeListener;
+import javafx.beans.value.ChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +14,21 @@ public class Curve extends Line {
     private WeightPoint c;
     private WeightPoint d;
 
-    public Curve(WeightPoint a, WeightPoint b, WeightPoint c, WeightPoint d) {
+    public Curve(DraggableWeightPoint a, DraggableWeightPoint b, DraggableWeightPoint c, DraggableWeightPoint d) {
         this.a = a;
         this.b = b;
         this.c = c;
         this.d = d;
 
-        ValueChangeListener listener = point -> {
+        ChangeListener<Number> listener = (observable, oldValue, newValue) -> {
             getPoints().clear();
             build();
         };
 
-        a.setListener(listener);
-        b.setListener(listener);
-        c.setListener(listener);
-        d.setListener(listener);
+        a.addListener(listener);
+        b.addListener(listener);
+        c.addListener(listener);
+        d.addListener(listener);
         build();
     }
 

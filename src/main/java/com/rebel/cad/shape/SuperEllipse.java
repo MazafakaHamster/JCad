@@ -60,4 +60,11 @@ public class SuperEllipse extends TPolyline {
     public double getN() {
         return n;
     }
+
+    @Override
+    public void move(double x, double y) {
+        super.move(x, y);
+        this.centerX = centerX + x;
+        this.centerY = centerY + y;
+   }
 }
