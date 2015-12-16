@@ -31,6 +31,9 @@ public class MainController extends Controller implements Initializable {
     private static double height = MainApp.INITIAL_HEIGHT;
     private ArrayList<HintedDot> dotsList = new ArrayList<>();
     private HintedDot rotationPoint;
+
+    public static ShapeGroup staticFigure;
+
     @FXML
     private ShapeGroup figure;
     @FXML
@@ -109,6 +112,10 @@ public class MainController extends Controller implements Initializable {
         return -(y - height / 2);
     }
 
+    public static ShapeGroup getFigure() {
+        return staticFigure;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         grid = createGrid(width, height - 40, step);
@@ -138,6 +145,14 @@ public class MainController extends Controller implements Initializable {
                 figure.move(0, delta / 2);
             resize();
         });
+        staticFigure = figure;
+
+        WeightPoint a = new WeightPoint(toRealX(0), toRealY(0), 1);
+        WeightPoint b = new WeightPoint(toRealX(40), toRealY(60), 1);
+        WeightPoint c = new WeightPoint(toRealX(80), toRealY(20), 1);
+        WeightPoint d = new WeightPoint(toRealX(100), toRealY(0), 1);
+
+        figure.getChildren().add(new Curve(a, b, c, d));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -195,38 +210,38 @@ public class MainController extends Controller implements Initializable {
         double radius = 30;
         double y = centerDot.getCenterY() + figureHeight / 2 - radius;
         double x = centerDot.getCenterX() - figureHeight / 3;
-        Dot dotOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
-        Dot dotOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
+        Point pointOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
+        Point pointOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
             figure.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
         }
 
-        Dot leftSecond = new Dot(centerDot.getCenterX() - figureHeight / 6 - radius, y);
-        Dot rightSecond = new Dot(centerDot.getCenterX() - figureHeight / 6 + radius, y);
-        Dot leftThird = new Dot(centerDot.getCenterX() - radius, y);
-        Dot rightThird = new Dot(centerDot.getCenterX() + radius, y);
-        Dot leftFourth = new Dot(centerDot.getCenterX() + figureHeight / 6 - radius, y);
-        Dot rightFourth = new Dot(centerDot.getCenterX() + figureHeight / 6 + radius, y);
+        Point leftSecond = new Point(centerDot.getCenterX() - figureHeight / 6 - radius, y);
+        Point rightSecond = new Point(centerDot.getCenterX() - figureHeight / 6 + radius, y);
+        Point leftThird = new Point(centerDot.getCenterX() - radius, y);
+        Point rightThird = new Point(centerDot.getCenterX() + radius, y);
+        Point leftFourth = new Point(centerDot.getCenterX() + figureHeight / 6 - radius, y);
+        Point rightFourth = new Point(centerDot.getCenterX() + figureHeight / 6 + radius, y);
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
         figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
-        Dot topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
-        Dot topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
+        Point topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
+        Point topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 
         double radius2 = 60;
         y = centerDot.getCenterY();
         x = centerDot.getCenterX() - figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
-        figure.getChildren().add(new Line(x, y, dotOnFirstCircle.getX(), dotOnFirstCircle.getY()));
+        figure.getChildren().add(new Line(x, y, pointOnFirstCircle.getX(), pointOnFirstCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
         figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
         figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
-        figure.getChildren().add(new Line(x, y, dotOnLastCircle.getX(), dotOnLastCircle.getY()));
+        figure.getChildren().add(new Line(x, y, pointOnLastCircle.getX(), pointOnLastCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
         figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
         figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
@@ -250,38 +265,38 @@ public class MainController extends Controller implements Initializable {
         double radius = 30;
         double y = centerDot.getCenterY() + figureHeight / 2 - radius;
         double x = centerDot.getCenterX() - figureHeight / 3;
-        Dot dotOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
-        Dot dotOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
+        Point pointOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
+        Point pointOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
             figure.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
         }
 
-        Dot leftSecond = new Dot(centerDot.getCenterX() - figureHeight / 6 - radius, y);
-        Dot rightSecond = new Dot(centerDot.getCenterX() - figureHeight / 6 + radius, y);
-        Dot leftThird = new Dot(centerDot.getCenterX() - radius, y);
-        Dot rightThird = new Dot(centerDot.getCenterX() + radius, y);
-        Dot leftFourth = new Dot(centerDot.getCenterX() + figureHeight / 6 - radius, y);
-        Dot rightFourth = new Dot(centerDot.getCenterX() + figureHeight / 6 + radius, y);
+        Point leftSecond = new Point(centerDot.getCenterX() - figureHeight / 6 - radius, y);
+        Point rightSecond = new Point(centerDot.getCenterX() - figureHeight / 6 + radius, y);
+        Point leftThird = new Point(centerDot.getCenterX() - radius, y);
+        Point rightThird = new Point(centerDot.getCenterX() + radius, y);
+        Point leftFourth = new Point(centerDot.getCenterX() + figureHeight / 6 - radius, y);
+        Point rightFourth = new Point(centerDot.getCenterX() + figureHeight / 6 + radius, y);
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
         figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
-        Dot topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
-        Dot topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
+        Point topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
+        Point topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 
         double radius2 = 60;
         y = centerDot.getCenterY();
         x = centerDot.getCenterX() - figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
-        figure.getChildren().add(new Line(x, y, dotOnFirstCircle.getX(), dotOnFirstCircle.getY()));
+        figure.getChildren().add(new Line(x, y, pointOnFirstCircle.getX(), pointOnFirstCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
         figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
         figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
         figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
-        figure.getChildren().add(new Line(x, y, dotOnLastCircle.getX(), dotOnLastCircle.getY()));
+        figure.getChildren().add(new Line(x, y, pointOnLastCircle.getX(), pointOnLastCircle.getY()));
         figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
         figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
         figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
