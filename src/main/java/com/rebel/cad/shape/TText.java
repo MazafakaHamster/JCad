@@ -3,11 +3,13 @@ package com.rebel.cad.shape;
 import com.rebel.cad.controllers.MainController;
 import javafx.scene.text.Text;
 
+import java.io.Serializable;
+
 /**
  * Created by Slava on 18.11.2015.
  */
 
-public class TText extends Text implements Transformable {
+public class TText extends Text implements Transformable, Serializable {
 
     public TText(double x, double y, String text) {
         super(x, y, text);

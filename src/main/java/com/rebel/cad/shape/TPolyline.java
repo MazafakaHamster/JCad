@@ -3,13 +3,14 @@ package com.rebel.cad.shape;
 import com.rebel.cad.controllers.MainController;
 import javafx.scene.shape.Polyline;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Slava on 05.11.2015.
  */
-public class TPolyline extends Polyline implements Transformable {
+public class TPolyline extends Polyline implements Transformable, Serializable {
 
     public TPolyline(double... points) {
         super(points);

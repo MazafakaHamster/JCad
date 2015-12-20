@@ -9,6 +9,7 @@ import com.rebel.cad.shape.impl.SuperEllipseTangent;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -17,9 +18,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +38,16 @@ public class MainController extends Controller implements Initializable {
 
     public static ShapeGroup staticFigure;
 
+    public static CurvePoint currPoint;
+    public static TextField weightStatic;
+
+    public static void setCurrPoint(CurvePoint currPoint) {
+        MainController.currPoint = currPoint;
+        weightStatic.setText(Double.toString(currPoint.getWeight()));
+    }
+
     @FXML
-    private ShapeGroup figure;
+    private ShapeGroup drawing;
     @FXML
     private VBox rootBox;
     @FXML
@@ -93,6 +104,9 @@ public class MainController extends Controller implements Initializable {
     private TextField ellipseB;
     @FXML
     private TextField ellipseN;
+    @FXML
+    private TextField weightText;
+
     private ShapeGroup grid;
     private ShapeGroup axises;
     private int step = 20;
@@ -136,33 +150,34 @@ public class MainController extends Controller implements Initializable {
             width = newValue.doubleValue();
             double delta = width - oldValue.doubleValue();
             if (oldValue.intValue() != 0)
-                figure.move(delta / 2, 0);
+                drawing.move(delta / 2, 0);
             resize();
         });
         rootBox.heightProperty().addListener((observable, oldValue, newValue) -> {
             height = newValue.doubleValue();
             double delta = height - oldValue.doubleValue();
             if (oldValue.intValue() != 0)
-                figure.move(0, delta / 2);
+                drawing.move(0, delta / 2);
             resize();
         });
-        staticFigure = figure;
+        staticFigure = drawing;
+        weightStatic = weightText;
 
-        DraggableWeightPoint a = new DraggableWeightPoint(toRealX(0), toRealY(0), 1);
-        DraggableWeightPoint b = new DraggableWeightPoint(toRealX(40), toRealY(40), 1);
-        DraggableWeightPoint c = new DraggableWeightPoint(toRealX(60), toRealY(-40), 1);
-        DraggableWeightPoint d = new DraggableWeightPoint(toRealX(100), toRealY(0), 1);
+        CurvePoint a = new CurvePoint(toRealX(0), toRealY(0), 1);
+        CurvePoint b = new CurvePoint(toRealX(40), toRealY(40), 1);
+        CurvePoint c = new CurvePoint(toRealX(60), toRealY(-40), 1);
+        CurvePoint d = new CurvePoint(toRealX(100), toRealY(0), 1);
 
-//        DraggableWeightPoint e = new DraggableWeightPoint(toRealX(140), toRealY(40), 1);
-//        DraggableWeightPoint f = new DraggableWeightPoint(toRealX(160), toRealY(40), 1);
-//        DraggableWeightPoint g = new DraggableWeightPoint(toRealX(200), toRealY(-40), 1);
+//        CurvePoint e = new CurvePoint(toRealX(140), toRealY(40), 1);
+//        CurvePoint f = new CurvePoint(toRealX(160), toRealY(40), 1);
+//        CurvePoint g = new CurvePoint(toRealX(200), toRealY(-40), 1);
 
-        figure.getChildren().add(new Curve(a, b, c, d));
-//        figure.getChildren().add(new Curve(d, e, f, g));
-        figure.getChildren().addAll(new BoundLine(a, b));
-        figure.getChildren().addAll(new BoundLine(d, c));
-//        figure.getChildren().addAll(new BoundLine(d, e));
-//        figure.getChildren().addAll(new BoundLine(f, g));
+        drawing.getChildren().add(new Curve(a, b, c, d));
+//        drawing.getChildren().add(new Curve(d, e, f, g));
+        drawing.getChildren().addAll(new BoundLine(a, b));
+        drawing.getChildren().addAll(new BoundLine(d, c));
+//        drawing.getChildren().addAll(new BoundLine(d, e));
+//        drawing.getChildren().addAll(new BoundLine(f, g));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -205,9 +220,9 @@ public class MainController extends Controller implements Initializable {
         groupPane.getChildren().removeAll(dotsList);
         dotsList.clear();
         dotCount = 0;
-        figure.getChildren().removeAll(figure.getChildren());
-        figure.getChildren().clear();
-//        figure.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
+        drawing.getChildren().removeAll(drawing.getChildren());
+        drawing.getChildren().clear();
+//        drawing.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
 //        axises.project(width, height / 2, 0.01, width / 2, height, 0.01, width/2, height/2, 0.01);
 //        grid.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
 //        clip();
@@ -223,7 +238,7 @@ public class MainController extends Controller implements Initializable {
         Point pointOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
         Point pointOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
-            figure.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
+            drawing.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
         }
 
@@ -236,35 +251,35 @@ public class MainController extends Controller implements Initializable {
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
-        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
+        drawing.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
         Point topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
         Point topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 
         double radius2 = 60;
         y = centerDot.getCenterY();
         x = centerDot.getCenterX() - figureHeight / 6;
-        figure.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
-        figure.getChildren().add(new Line(x, y, pointOnFirstCircle.getX(), pointOnFirstCircle.getY()));
-        figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
-        figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
+        drawing.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
+        drawing.getChildren().add(new Line(x, y, pointOnFirstCircle.getX(), pointOnFirstCircle.getY()));
+        drawing.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
+        drawing.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
+        drawing.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
-        figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
-        figure.getChildren().add(new Line(x, y, pointOnLastCircle.getX(), pointOnLastCircle.getY()));
-        figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
-        figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
+        drawing.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
+        drawing.getChildren().add(new Line(x, y, pointOnLastCircle.getX(), pointOnLastCircle.getY()));
+        drawing.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
+        drawing.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
+        drawing.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
 
-        figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
-        figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
+        drawing.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
+        drawing.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
 
         Line horAx = new Line(centerDot.getCenterX() - figureHeight / 4, centerDot.getCenterY(), centerDot.getCenterX() + figureHeight / 4, centerDot.getCenterY());
         horAx.getStrokeDashArray().addAll(10d);
-        figure.getChildren().add(horAx);
+        drawing.getChildren().add(horAx);
         Line verAx = new Line(centerDot.getCenterX(), centerDot.getCenterY() - figureHeight / 1.8, centerDot.getCenterX(), centerDot.getCenterY() + figureHeight / 1.8);
         verAx.getStrokeDashArray().addAll(10d);
-        figure.getChildren().add(verAx);
+        drawing.getChildren().add(verAx);
         clip();
     }
 
@@ -278,7 +293,7 @@ public class MainController extends Controller implements Initializable {
         Point pointOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
         Point pointOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
-            figure.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
+            drawing.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
         }
 
@@ -291,39 +306,39 @@ public class MainController extends Controller implements Initializable {
 
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
-        figure.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
+        drawing.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
         Point topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
         Point topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
 
         double radius2 = 60;
         y = centerDot.getCenterY();
         x = centerDot.getCenterX() - figureHeight / 6;
-        figure.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
-        figure.getChildren().add(new Line(x, y, pointOnFirstCircle.getX(), pointOnFirstCircle.getY()));
-        figure.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
-        figure.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
+        drawing.getChildren().add(new Line(x, y, topStart.getX(), topStart.getY()));
+        drawing.getChildren().add(new Line(x, y, pointOnFirstCircle.getX(), pointOnFirstCircle.getY()));
+        drawing.getChildren().add(new Line(x, y, leftSecond.getX(), leftSecond.getY()));
+        drawing.getChildren().add(new Line(x, y, rightSecond.getX(), rightSecond.getY()));
+        drawing.getChildren().add(new Arc(x, y, radius2, 111, 282));//, Axis.Horizontal));
 
         x = centerDot.getCenterX() + figureHeight / 6;
-        figure.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
-        figure.getChildren().add(new Line(x, y, pointOnLastCircle.getX(), pointOnLastCircle.getY()));
-        figure.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
-        figure.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
-        figure.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
+        drawing.getChildren().add(new Line(x, y, topEnd.getX(), topEnd.getY()));
+        drawing.getChildren().add(new Line(x, y, pointOnLastCircle.getX(), pointOnLastCircle.getY()));
+        drawing.getChildren().add(new Line(x, y, leftFourth.getX(), leftFourth.getY()));
+        drawing.getChildren().add(new Line(x, y, rightFourth.getX(), rightFourth.getY()));
+        drawing.getChildren().add(new Arc(x, y, radius2, 258, 68));//, Axis.Horizontal));
 
-        figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
-        figure.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
+        drawing.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), leftThird.getX(), leftThird.getY()));
+        drawing.getChildren().add(new Line(centerDot.getCenterX(), centerDot.getCenterY(), rightThird.getX(), rightThird.getY()));
 
         Line horAx = new Line(centerDot.getCenterX() - figureHeight / 4, centerDot.getCenterY(), centerDot.getCenterX() + figureHeight / 4, centerDot.getCenterY());
         horAx.getStrokeDashArray().addAll(10d);
-        figure.getChildren().add(horAx);
+        drawing.getChildren().add(horAx);
         Line verAx = new Line(centerDot.getCenterX(), centerDot.getCenterY() - figureHeight / 1.8, centerDot.getCenterX(), centerDot.getCenterY() + figureHeight / 1.8);
         verAx.getStrokeDashArray().addAll(10d);
-        figure.getChildren().add(verAx);
+        drawing.getChildren().add(verAx);
     }
 
     private void clip() {
-        figure.setClip(new Rectangle(0, 0, width - 180, height));
+        drawing.setClip(new Rectangle(0, 0, width - 180, height));
         axises.setClip(new Rectangle(0, 0, width - 180, height));
         grid.setClip(new Rectangle(0, 0, width - 180, height));
 
@@ -342,7 +357,7 @@ public class MainController extends Controller implements Initializable {
             HintedDot dot = new HintedDot(event.getX(), event.getY(), dotCount++);
             dot.setTooltip(fx, fy);
             dotsList.add(dot);
-            figure.getChildren().add(dot);
+            drawing.getChildren().add(dot);
             drawFigure(dotsList);
             groupPane.setOnMouseClicked(null);
         });
@@ -364,12 +379,12 @@ public class MainController extends Controller implements Initializable {
         groupPane.getChildren().add(grid);
         grid.toBack();
 
-        figure.getChildren().clear();
+        drawing.getChildren().clear();
 
-//        figure.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
-//        figure.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
-        figure.setScaleX(step / prevStep);
-        figure.setScaleY(step / prevStep);
+//        drawing.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
+//        drawing.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
+        drawing.setScaleX(step / prevStep);
+        drawing.setScaleY(step / prevStep);
     }
 
     private void resize() {
@@ -393,7 +408,7 @@ public class MainController extends Controller implements Initializable {
             rotationPoint.setTooltip(fx, fy);
             groupPane.getChildren().add(rotationPoint);
             double degrees = Double.parseDouble(rotateField.getText());
-            figure.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
+            drawing.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
             groupPane.setOnMouseClicked(null);
         });
     }
@@ -403,7 +418,7 @@ public class MainController extends Controller implements Initializable {
         groupPane.getChildren().remove(rotationPoint);
         rotationPoint = new HintedDot(toRealX(0), toRealY(0), dotCount++);
         double degrees = Double.parseDouble(rotateField.getText());
-        figure.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
+        drawing.rotate(rotationPoint.getCenterX(), rotationPoint.getCenterY(), degrees);
     }
 
     @FXML
@@ -420,7 +435,7 @@ public class MainController extends Controller implements Initializable {
         } else {
             y = Double.parseDouble(deltaY.getText());
         }
-        figure.move(x, y);
+        drawing.move(x, y);
     }
 
     @FXML
@@ -434,7 +449,7 @@ public class MainController extends Controller implements Initializable {
 
         axises.affinis(xx, xy, yx, yy, dx, dy);
         grid.affinis(xx, xy, yx, yy, dx, dy);
-        figure.affinis(xx, xy, yx, yy, dx, dy);
+        drawing.affinis(xx, xy, yx, yy, dx, dy);
 
         clip();
     }
@@ -451,7 +466,7 @@ public class MainController extends Controller implements Initializable {
         double y = Double.parseDouble(projY.getText());
         double w = Double.parseDouble(projW.getText());
 
-        figure.project(xx, xy, xw, yx, yy, yw, x, y, w);
+        drawing.project(xx, xy, xw, yx, yy, yw, x, y, w);
         axises.project(xx, xy, xw, yx, yy, yw, x, y, w);
         grid.project(xx, xy, xw, yx, yy, yw, x, y, w);
         clip();
@@ -481,13 +496,66 @@ public class MainController extends Controller implements Initializable {
         double n = Double.parseDouble(ellipseN.getText());
 
         SuperEllipse superEllipse = new SuperEllipse(toRealX(x), toRealY(y), a, b, n);
-        figure.getChildren().addAll(superEllipse);
+        drawing.getChildren().addAll(superEllipse);
         superEllipse.setOnMouseClicked(event -> {
             double clickX = event.getX();
             double clickY = event.getY();
-            figure.getChildren().addAll(new SuperEllipseTangent(superEllipse, clickX, clickY));
-            figure.getChildren().addAll(new SuperEllipseNormal(superEllipse, clickX, clickY));
+            drawing.getChildren().addAll(new SuperEllipseTangent(superEllipse, clickX, clickY));
+            drawing.getChildren().addAll(new SuperEllipseNormal(superEllipse, clickX, clickY));
         });
-        figure.getChildren().add(superEllipse);
+        drawing.getChildren().add(superEllipse);
     }
+
+    @FXML
+    private void save() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Drawing");
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showSaveDialog(MainApp.getMainStage());
+
+        if(file != null){
+            saveFile(file);
+        }
+    }
+
+    private void saveFile(File file){
+        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            outputStream.writeObject(drawing.getChilds());
+            outputStream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadFile(File file){
+        try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
+            ArrayList<Node> newDrawing = (ArrayList<Node>) inputStream.readObject();
+            drawing.clear();
+            drawing.addAll(newDrawing);
+            System.out.println(newDrawing);
+            inputStream.close();
+        } catch (ClassNotFoundException | IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void load() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Drawing");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File object = fileChooser.showOpenDialog(MainApp.getMainStage());
+        loadFile(object);
+    }
+
+    @FXML
+    private void saveWeight() {
+        currPoint.setWeight(Double.parseDouble(weightText.getText()));
+    }
+
 }

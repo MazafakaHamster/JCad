@@ -9,20 +9,25 @@
     <children>
         <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
             <children>
-                <Button fx:id="drawButton" mnemonicParsing="false" onAction="#draw" prefHeight="34.0" prefWidth="52.0" text="Draw">
+                <Button fx:id="drawButton" mnemonicParsing="false" onAction="#draw" text="Draw">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>
                 </Button>
-                <Button mnemonicParsing="false" onAction="#quickDraw" prefHeight="34.0" prefWidth="52.0" text="qDraw">
+                <Button mnemonicParsing="false" onAction="#quickDraw" text="qDraw">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="eraseButton" mnemonicParsing="false" onAction="#erase" prefHeight="34.0" prefWidth="72.0" text="Erase" />
-                <Button mnemonicParsing="false" onAction="#rebuild" prefHeight="34.0" prefWidth="71.0" text="Rebuild" />
-                <TextField fx:id="stepField" prefHeight="25.0" prefWidth="94.0" />
+                <Button fx:id="eraseButton" mnemonicParsing="false" onAction="#erase" text="Erase" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+                <Button mnemonicParsing="false" onAction="#rebuild" text="Rebuild" />
+                <TextField fx:id="stepField" prefHeight="25.0" prefWidth="61.0" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Button mnemonicParsing="false" onAction="#showImage" text="Image" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <Button mnemonicParsing="false" onAction="#save" text="Save" />
+            <Button mnemonicParsing="false" onAction="#load" text="Load" />
             </children>
             <VBox.margin>
                 <Insets />
@@ -38,7 +43,7 @@
             <children>
                 <Pane fx:id="groupPane">
                     <children>
-                        <ShapeGroup fx:id="figure" autoSizeChildren="false" />
+                        <ShapeGroup fx:id="drawing" autoSizeChildren="false" />
                     </children>
                 </Pane>
                 <Accordion>
@@ -231,6 +236,25 @@
                                        </children>
                                     </HBox>
                                     <Button mnemonicParsing="false" onAction="#buildEllipse" text="Build" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane minWidth="180.0" prefWidth="180.0" text="Curve">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="180.0" prefWidth="178.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Weight:" />
+                                          <TextField fx:id="weightText" prefHeight="25.0" prefWidth="91.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#saveWeight" text="Save" />
                                  </children>
                               </VBox>
                            </children>

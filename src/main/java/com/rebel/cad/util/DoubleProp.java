@@ -22,7 +22,7 @@ public class DoubleProp extends DoublePropertyBase {
 
     @Override
     public Object getBean() {
-        return this;
+        return null;
     }
 
     @Override

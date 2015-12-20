@@ -19,7 +19,7 @@ public class BoundLine extends javafx.scene.shape.Line {
         getStrokeDashArray().setAll(10.0, 5.0);
     }
 
-    public BoundLine(Point a, Point b) {
+    public BoundLine(CurvePoint a, CurvePoint b) {
         startXProperty().bind(a.getXProperty());
         startYProperty().bind(a.getYProperty());
         endXProperty().bind(b.getXProperty());
