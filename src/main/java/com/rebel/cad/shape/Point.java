@@ -1,12 +1,7 @@
 package com.rebel.cad.shape;
 
-import com.rebel.cad.listeners.ValueChangeListener;
-import com.sun.javafx.scene.DirtyBits;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 /**
  * Created by Slava on 22.09.2015.

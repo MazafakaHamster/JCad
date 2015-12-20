@@ -14,10 +14,12 @@ public class Line extends TPolyline {
 
     public Line(double x1, double y1, double x2, double y2, double opacity) {
         super(x1, y1, x2, y2);
+        this.start = new Point(x1, y1);
+        this.end = new Point(x2, y2);
         setOpacity(opacity);
     }
 
-    public Line(Point a, Point b) {
-        super(a.getX(), a.getY(), b.getX(), b.getY());
+    public Line(Point start, Point end) {
+        super(start.getX(), start.getY(), end.getX(), end.getY());
     }
 }

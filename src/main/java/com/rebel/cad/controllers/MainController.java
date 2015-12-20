@@ -153,16 +153,16 @@ public class MainController extends Controller implements Initializable {
         DraggableWeightPoint c = new DraggableWeightPoint(toRealX(60), toRealY(-40), 1);
         DraggableWeightPoint d = new DraggableWeightPoint(toRealX(100), toRealY(0), 1);
 
-        DraggableWeightPoint e = new DraggableWeightPoint(toRealX(140), toRealY(40), 1);
-        DraggableWeightPoint f = new DraggableWeightPoint(toRealX(160), toRealY(40), 1);
-        DraggableWeightPoint g = new DraggableWeightPoint(toRealX(200), toRealY(-40), 1);
+//        DraggableWeightPoint e = new DraggableWeightPoint(toRealX(140), toRealY(40), 1);
+//        DraggableWeightPoint f = new DraggableWeightPoint(toRealX(160), toRealY(40), 1);
+//        DraggableWeightPoint g = new DraggableWeightPoint(toRealX(200), toRealY(-40), 1);
 
         figure.getChildren().add(new Curve(a, b, c, d));
-        figure.getChildren().add(new Curve(d, e, f, g));
+//        figure.getChildren().add(new Curve(d, e, f, g));
         figure.getChildren().addAll(new BoundLine(a, b));
         figure.getChildren().addAll(new BoundLine(d, c));
-        figure.getChildren().addAll(new BoundLine(d, e));
-        figure.getChildren().addAll(new BoundLine(f, g));
+//        figure.getChildren().addAll(new BoundLine(d, e));
+//        figure.getChildren().addAll(new BoundLine(f, g));
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
