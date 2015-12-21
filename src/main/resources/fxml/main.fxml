@@ -246,15 +246,24 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="180.0" prefWidth="178.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <VBox alignment="TOP_CENTER" layoutX="9.0" prefHeight="180.0" prefWidth="178.0" spacing="5.0" AnchorPane.bottomAnchor="19.19999999999999" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="10.199999999999989" AnchorPane.topAnchor="0.0">
                                  <children>
+                                    <Button mnemonicParsing="false" onAction="#buildCurve" prefHeight="25.0" prefWidth="148.0" text="Build" />
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#startRecord" prefHeight="25.0" prefWidth="55.0" text="Start" />
+                                          <Button mnemonicParsing="false" onAction="#stopRecord" prefHeight="25.0" prefWidth="53.0" text="Stop" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#play" prefHeight="25.0" prefWidth="148.0" text="Play" />
+                                    <Separator prefWidth="200.0" />
                                     <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
                                        <children>
                                           <Label text="Weight:" />
                                           <TextField fx:id="weightText" prefHeight="25.0" prefWidth="91.0" />
                                        </children>
                                     </HBox>
-                                    <Button mnemonicParsing="false" onAction="#saveWeight" text="Save" />
+                                    <Button mnemonicParsing="false" onAction="#saveWeight" prefHeight="25.0" prefWidth="147.0" text="Save" />
                                  </children>
                               </VBox>
                            </children>

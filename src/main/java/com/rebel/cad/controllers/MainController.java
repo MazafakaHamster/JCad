@@ -131,6 +131,8 @@ public class MainController extends Controller implements Initializable {
         return staticFigure;
     }
 
+    public ArrayList<Curve> curves = new ArrayList<>();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         grid = createGrid(width, height - 40, step);
@@ -163,21 +165,17 @@ public class MainController extends Controller implements Initializable {
         staticFigure = drawing;
         weightStatic = weightText;
 
-        CurvePoint a = new CurvePoint(toRealX(0), toRealY(0), 1);
-        CurvePoint b = new CurvePoint(toRealX(40), toRealY(40), 1);
-        CurvePoint c = new CurvePoint(toRealX(60), toRealY(-40), 1);
-        CurvePoint d = new CurvePoint(toRealX(100), toRealY(0), 1);
-
-//        CurvePoint e = new CurvePoint(toRealX(140), toRealY(40), 1);
-//        CurvePoint f = new CurvePoint(toRealX(160), toRealY(40), 1);
-//        CurvePoint g = new CurvePoint(toRealX(200), toRealY(-40), 1);
-
-        drawing.getChildren().add(new Curve(a, b, c, d));
-//        drawing.getChildren().add(new Curve(d, e, f, g));
-        drawing.getChildren().addAll(new BoundLine(a, b));
-        drawing.getChildren().addAll(new BoundLine(d, c));
-//        drawing.getChildren().addAll(new BoundLine(d, e));
-//        drawing.getChildren().addAll(new BoundLine(f, g));
+//        CurvePoint a = new CurvePoint(toRealX(0), toRealY(0), 1);
+//        CurvePoint b = new CurvePoint(toRealX(40), toRealY(40), 1);
+//        CurvePoint c = new CurvePoint(toRealX(60), toRealY(-40), 1);
+//        CurvePoint d = new CurvePoint(toRealX(100), toRealY(0), 1);
+//
+//     //   a.setAnimation(toRealX(0), toRealY(0), toRealX(200), toRealY(200), 1000);
+//
+//        drawing.getChildren().add(new Curve(a, b, c, d));
+//        drawing.getChildren().addAll(new BoundLine(a, b));
+//        drawing.getChildren().addAll(new BoundLine(d, c));
+//        a.play();
     }
 
     private ShapeGroup createGrid(double width, double height, int step) {
@@ -215,6 +213,21 @@ public class MainController extends Controller implements Initializable {
     }
 
     @FXML
+    private void startRecord() {
+        curves.forEach(curve -> curve.getPoints().forEach(CurvePoint::savePosition));
+    }
+
+    @FXML
+    private void stopRecord() {
+        curves.forEach(curve -> curve.getPoints().forEach(CurvePoint::restorePosition));
+    }
+
+    @FXML
+    private void play() {
+        curves.forEach(curve -> curve.getPoints().forEach(CurvePoint::play));
+    }
+
+    @FXML
     private void erase() {
         dotsList.add(rotationPoint);
         groupPane.getChildren().removeAll(dotsList);
@@ -222,6 +235,7 @@ public class MainController extends Controller implements Initializable {
         dotCount = 0;
         drawing.getChildren().removeAll(drawing.getChildren());
         drawing.getChildren().clear();
+        curves.clear();
 //        drawing.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
 //        axises.project(width, height / 2, 0.01, width / 2, height, 0.01, width/2, height/2, 0.01);
 //        grid.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
@@ -556,6 +570,28 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void saveWeight() {
         currPoint.setWeight(Double.parseDouble(weightText.getText()));
+    }
+
+    @FXML
+    private void buildCurve() {
+        groupPane.setOnMouseClicked(event -> {
+            double x = event.getX();
+            double y = event.getY();
+            CurvePoint a = new CurvePoint(x, y, 1);
+            CurvePoint b = new CurvePoint(x, y, 1);
+            groupPane.setOnMouseClicked(event1 -> {
+                double x1 = event1.getX();
+                double y1 = event1.getY();
+                CurvePoint c = new CurvePoint(x1, y1, 1);
+                CurvePoint d = new CurvePoint(x1, y1, 1);
+                Curve curve = new Curve(a, b, c ,d);
+                curves.add(curve);
+                drawing.getChildren().add(curve);
+                drawing.getChildren().addAll(new BoundLine(a, b));
+                drawing.getChildren().addAll(new BoundLine(d, c));
+                groupPane.setOnMouseClicked(null);
+            });
+        });
     }
 
 }

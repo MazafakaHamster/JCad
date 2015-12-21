@@ -4,7 +4,9 @@ import com.rebel.cad.collections.ShapeGroup;
 import javafx.beans.value.ChangeListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Slava on 15.12.2015.
@@ -29,13 +31,9 @@ public class Curve extends ShapeGroup {
         };
 
         a.addListener(listener);
-        a.getWeightProp().addListener(listener);
         b.addListener(listener);
-        b.getWeightProp().addListener(listener);
         c.addListener(listener);
-        c.getWeightProp().addListener(listener);
         d.addListener(listener);
-        d.getWeightProp().addListener(listener);
         build();
         getChildren().addAll(a, b, c, d, line);
     }
@@ -52,9 +50,22 @@ public class Curve extends ShapeGroup {
     }
 
     private double function(double ra, double rb, double rc, double rd, double u) {
-        return ra * a.getWeight() * Math.pow((1 - u), 3)
+        return (ra * a.getWeight() * Math.pow((1 - u), 3)
                 + 3 * rb * b.getWeight() * Math.pow((1 - u), 2) * u
                 + 3 * rc * c.getWeight() * (1 - u) * Math.pow(u, 2)
-                + rd * d.getWeight() * Math.pow(u, 3);
+                + rd * d.getWeight() * Math.pow(u, 3)) /
+                (a.getWeight() * Math.pow((1 - u), 3)
+                        + 3 * b.getWeight() * Math.pow((1 - u), 2) * u
+                        + 3 * c.getWeight() * (1 - u) * Math.pow(u, 2)
+                        + d.getWeight() * Math.pow(u, 3));
+    }
+
+    public Set<CurvePoint> getPoints() {
+        HashSet<CurvePoint> points = new HashSet<>();
+        points.add(a);
+        points.add(b);
+        points.add(c);
+        points.add(d);
+        return points;
     }
 }

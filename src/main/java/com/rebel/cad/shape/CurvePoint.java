@@ -3,12 +3,14 @@ package com.rebel.cad.shape;
 import com.rebel.cad.MainApp;
 import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.controllers.MainController;
-import com.rebel.cad.util.DoubleProp;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,10 @@ public class CurvePoint extends ShapeGroup {
     private List<ChangeListener> listeners = new ArrayList<>();
     private WeightPoint weightPoint;
     private javafx.scene.shape.Circle circle;
+    private Animation animation;
+    private double tempX;
+    private double tempY;
+    private boolean recording;
 
     public CurvePoint(double x, double y, double weight) {
         weightPoint = new WeightPoint(x, y, weight);
@@ -30,15 +36,66 @@ public class CurvePoint extends ShapeGroup {
         enableDrag();
     }
 
+    public void savePosition() {
+        tempX = getX();
+        tempY = getY();
+        recording = true;
+    }
+
+    public void restorePosition() {
+        recording = false;
+        if (getX() != tempX && getY() != tempY) {
+            setX(tempX);
+            setY(tempY);
+            setAnimation(tempX, getX(), tempY, getY(), 2000);
+        }
+    }
+
+    public boolean isRecording() {
+        return recording;
+    }
+
+    public void setAnimation(double startX, double endX, double startY, double endY, double t) {
+        setX(startX);
+        setY(startY);
+        animation = new Transition() {
+            {
+                setCycleDuration(Duration.millis(t));
+                setCycleCount(2);
+            }
+
+            double calcY(double x) {
+                return ((x - startX) * (endY - startY)) / (endX - startX) + startY;
+            }
+
+            protected void interpolate(double frac) {
+                double sign = (getX() < endX) ? 1 : -1;
+                setX(getX() + sign * Math.abs(getX() - endX) * frac);
+                setY(calcY(getX()));
+            }
+
+            @Override
+            public void play() {
+                setX(startX);
+                setY(startY);
+                super.play();
+            }
+        };
+    }
+
+    public void play() {
+        if (animation != null) {
+            animation.play();
+        }
+    }
+
     public void addListener(ChangeListener<? extends Number> listener) {
         this.listeners.add(listener);
     }
 
     private void enableDrag() {
         final Delta dragDelta = new Delta();
-        getCircle().setOnMouseClicked(mouseEvent -> {
-            MainController.setCurrPoint(this);
-        });
+        getCircle().setOnMouseClicked(mouseEvent -> MainController.setCurrPoint(this));
         getCircle().setOnMousePressed(mouseEvent -> {
             dragDelta.x = getCircle().getCenterX() - mouseEvent.getX();
             dragDelta.y = getCircle().getCenterY() - mouseEvent.getY();
@@ -48,15 +105,11 @@ public class CurvePoint extends ShapeGroup {
         getCircle().setOnMouseDragged(mouseEvent -> {
             double newX = mouseEvent.getX() + dragDelta.x;
             if (newX > 0 && newX < MainApp.getMainStage().getScene().getWidth()) {
-                getCircle().setCenterX(newX);
-                weightPoint.setX(newX);
-                listeners.forEach(changeListener -> changeListener.changed(null, null, null));
+                setX(newX);
             }
             double newY = mouseEvent.getY() + dragDelta.y;
             if (newY > 0 && newY < MainApp.getMainStage().getScene().getHeight()) {
-                getCircle().setCenterY(newY);
-                weightPoint.setY(newY);
-                listeners.forEach(changeListener -> changeListener.changed(null, null, null));
+                setY(newY);
             }
         });
         getCircle().setOnMouseEntered(mouseEvent -> {
@@ -79,44 +132,55 @@ public class CurvePoint extends ShapeGroup {
         return weightPoint.getX();
     }
 
-    public DoubleProperty getXProperty() {
-        return weightPoint.getXProperty();
+    public void setX(double x) {
+        circle.setCenterX(x);
+        weightPoint.setX(x);
+        changed();
     }
 
-    public void setX(double x) {
-        weightPoint.setX(x);
+    public DoubleProperty getXProperty() {
+        return weightPoint.getXProperty();
     }
 
     public double getY() {
         return weightPoint.getY();
     }
 
-    public DoubleProperty getYProperty() {
-        return weightPoint.getYProperty();
+    public void setY(double y) {
+        circle.setCenterY(y);
+        weightPoint.setY(y);
+        changed();
     }
 
-    public void setY(double y) {
-        weightPoint.setY(y);
+    public DoubleProperty getYProperty() {
+        return weightPoint.getYProperty();
     }
 
     public double getWeight() {
         return weightPoint.getWeight();
     }
 
+    public void setWeight(double weight) {
+        weightPoint.setWeight(weight);
+        changed();
+    }
+
     public DoubleProperty getWeightProp() {
         return weightPoint.getWeightProperty();
     }
 
-    public void setWeight(double weight) {
-        weightPoint.setWeight(weight);
-    }
-
-    private class Delta { double x, y; }
-
     @Override
     public String toString() {
-        return "CurvePoint{"+
+        return "CurvePoint{" +
                 ", weightPoint=" + weightPoint.toString() +
                 '}';
+    }
+
+    private void changed() {
+        listeners.forEach(changeListener -> changeListener.changed(null, null, null));
+    }
+
+    private class Delta {
+        double x, y;
     }
 }
