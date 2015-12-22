@@ -3,26 +3,28 @@ package com.rebel.cad.shape;
 import com.rebel.cad.MainApp;
 import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.shape.wrappers.CircleWrapper;
+import com.rebel.cad.util.DoubleChangeListener;
+import com.rebel.cad.util.DoubleProperty;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Slava on 16.12.2015.
  */
 public class CurvePoint extends ShapeGroup {
 
-    private List<ChangeListener> listeners = new ArrayList<>();
+    private Set<DoubleChangeListener> listeners = new HashSet<>();
     private WeightPoint weightPoint;
-    private javafx.scene.shape.Circle circle;
+    private CircleWrapper circle;
     private Animation animation;
     private double tempX;
     private double tempY;
@@ -30,10 +32,18 @@ public class CurvePoint extends ShapeGroup {
 
     public CurvePoint(double x, double y, double weight) {
         weightPoint = new WeightPoint(x, y, weight);
-        circle = new javafx.scene.shape.Circle(x, y, 7, Color.BLUE);
+        circle = new CircleWrapper(x, y, 7, Color.BLUE);
         circle.setOpacity(0.6);
         getChildren().add(circle);
         enableDrag();
+    }
+
+    public Set<DoubleChangeListener> getListeners() {
+        return listeners;
+    }
+
+    public void addListeners(Collection<DoubleChangeListener> listeners) {
+        this.listeners.addAll(listeners);
     }
 
     public void savePosition() {
@@ -89,7 +99,7 @@ public class CurvePoint extends ShapeGroup {
         }
     }
 
-    public void addListener(ChangeListener<? extends Number> listener) {
+    public void addListener(DoubleChangeListener listener) {
         this.listeners.add(listener);
     }
 
@@ -172,15 +182,53 @@ public class CurvePoint extends ShapeGroup {
     @Override
     public String toString() {
         return "CurvePoint{" +
-                ", weightPoint=" + weightPoint.toString() +
+                "listeners=" + listeners +
+                ", weightPoint=" + weightPoint +
+                ", circle=" + circle +
+                ", animation=" + animation +
+                ", tempX=" + tempX +
+                ", tempY=" + tempY +
+                ", recording=" + recording +
                 '}';
     }
 
     private void changed() {
-        listeners.forEach(changeListener -> changeListener.changed(null, null, null));
+        listeners.forEach(changeListener -> changeListener.changed(0, 0));
     }
 
     private class Delta {
         double x, y;
+    }
+
+    public void startConnection() {
+        getCircle().setOnMouseClicked(mouseEvent -> {
+            getCircle().setFill(Color.RED);
+            MainController.setCurrPoint(this);
+        });
+    }
+
+    public void resetCircle() {
+        circle.setCenterX(getX());
+        circle.setCenterY(getY());
+        circle.setRadius(7);
+        circle.setFill(Color.BLUE);
+        circle.setOpacity(0.6);
+
+    }
+
+    public void endConnection() {
+        getCircle().setFill(Color.BLUE);
+        getCircle().setOnMouseClicked(mouseEvent -> {
+            MainController.setCurrPoint(this);
+        });
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof CurvePoint)) {
+            return false;
+        }
+        CurvePoint curvePoint = (CurvePoint) object;
+        return getX() == curvePoint.getX() && getY() == curvePoint.getY() && getWeight() == curvePoint.getWeight();
     }
 }

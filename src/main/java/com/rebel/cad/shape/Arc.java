@@ -1,11 +1,12 @@
 package com.rebel.cad.shape;
 
 import com.rebel.cad.collections.ShapeGroup;
+import com.rebel.cad.shape.wrappers.PolylineWrapper;
 
 /**
  * Created by Slava on 05.11.2015.
  */
-public class Arc extends TPolyline {
+public class Arc extends PolylineWrapper {
     protected double centerX;
     protected double centerY;
     protected double radius;

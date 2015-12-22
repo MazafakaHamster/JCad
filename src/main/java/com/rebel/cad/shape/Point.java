@@ -1,8 +1,6 @@
 package com.rebel.cad.shape;
 
-import com.rebel.cad.util.DoubleProp;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.DoublePropertyBase;
+import com.rebel.cad.util.DoubleProperty;
 
 import java.io.Serializable;
 
@@ -10,9 +8,8 @@ import java.io.Serializable;
  * Created by Slava on 22.09.2015.
  */
 public class Point implements Serializable {
-    private final DoubleProp x = new DoubleProp();
-
-    private final DoubleProp y = new DoubleProp();
+    private DoubleProperty x = new DoubleProperty();
+    private DoubleProperty y = new DoubleProperty();
 
     public Point() {
     }
@@ -23,7 +20,7 @@ public class Point implements Serializable {
     }
 
     public double getX() {
-        return x.doubleValue();
+        return x.getValue();
     }
 
     public DoubleProperty getXProperty() {
@@ -35,7 +32,7 @@ public class Point implements Serializable {
     }
 
     public double getY() {
-        return y.doubleValue();
+        return y.getValue();
     }
 
     public DoubleProperty getYProperty() {
@@ -45,6 +42,8 @@ public class Point implements Serializable {
     public void setY(double y) {
         this.y.setValue(y);
     }
+
+
 
     @Override
     public String toString() {

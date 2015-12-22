@@ -3,13 +3,12 @@ package com.rebel.cad.controllers;
 import com.rebel.cad.MainApp;
 import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.shape.*;
-import com.rebel.cad.shape.BoundLine;
 import com.rebel.cad.shape.impl.SuperEllipseNormal;
 import com.rebel.cad.shape.impl.SuperEllipseTangent;
+import com.rebel.cad.shape.wrappers.TextWrapper;
 import com.rebel.cad.util.Helper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -41,9 +40,18 @@ public class MainController extends Controller implements Initializable {
     public static CurvePoint currPoint;
     public static TextField weightStatic;
 
-    public static void setCurrPoint(CurvePoint currPoint) {
-        MainController.currPoint = currPoint;
-        weightStatic.setText(Double.toString(currPoint.getWeight()));
+    public static void setCurrPoint(CurvePoint currentPoint) {
+        if (isConnecting) {
+            if (currPoint == null) {
+                currPoint = currentPoint;
+            } else {
+                curves.forEach(curve -> curve.connect(currentPoint, currPoint));
+                curves.forEach(curve -> curve.getPoints().forEach(CurvePoint::endConnection));
+                isConnecting = false;
+            }
+        }
+        currPoint = currentPoint;
+        weightStatic.setText(Double.toString(currentPoint.getWeight()));
     }
 
     @FXML
@@ -131,7 +139,7 @@ public class MainController extends Controller implements Initializable {
         return staticFigure;
     }
 
-    public ArrayList<Curve> curves = new ArrayList<>();
+    public static ArrayList<Curve> curves = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -193,7 +201,7 @@ public class MainController extends Controller implements Initializable {
             grid.getChildren().add(new Line(0, y1, width, y1, 0.4));
         }
 
-        TText text = new TText(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
+        TextWrapper text = new TextWrapper(width / 2 - 20, height / 2 - step - step / 10, Integer.toString(step));
         text.setOpacity(1);
         grid.getChildren().add(text);
 
@@ -206,8 +214,8 @@ public class MainController extends Controller implements Initializable {
         axis.getChildren().add(new Line(width / 2, 0, width / 2, height));
         axis.getChildren().add(new Line(0, height / 2, width, height / 2));
 
-        axis.getChildren().add(new TText(width - 20, height / 2 + 20, "X"));
-        axis.getChildren().add(new TText(width / 2 - 20, 20, "Y"));
+        axis.getChildren().add(new TextWrapper(width - 20, height / 2 + 20, "X"));
+        axis.getChildren().add(new TextWrapper(width / 2 - 20, 20, "Y"));
 
         return axis;
     }
@@ -356,13 +364,13 @@ public class MainController extends Controller implements Initializable {
         axises.setClip(new Rectangle(0, 0, width - 180, height));
         grid.setClip(new Rectangle(0, 0, width - 180, height));
 
-        }
+    }
 
-        @FXML
-        private void draw() {
-            showInform("Center point", "Place center point on the plane");
-            createDot();
-        }
+    @FXML
+    private void draw() {
+        showInform("Center point", "Place center point on the plane");
+        createDot();
+    }
 
     private void createDot() {
         groupPane.setOnMouseClicked(event -> {
@@ -396,7 +404,7 @@ public class MainController extends Controller implements Initializable {
         drawing.getChildren().clear();
 
 //        drawing.getChildren().addAll(new Line(toRealX(-50), toRealY(50), toRealX(-50), toRealY(-50), toRealX(50), toRealY(-50), toRealX(50), toRealY(50), toRealX(-50), toRealY(50)));
-//        drawing.getChildren().addAll(new TText(toRealX(60), toRealY(60), "Hello"));
+//        drawing.getChildren().addAll(new TextWrapper(toRealX(60), toRealY(60), "Hello"));
         drawing.setScaleX(step / prevStep);
         drawing.setScaleY(step / prevStep);
     }
@@ -530,29 +538,47 @@ public class MainController extends Controller implements Initializable {
 
         File file = fileChooser.showSaveDialog(MainApp.getMainStage());
 
-        if(file != null){
+        if (file != null) {
             saveFile(file);
         }
     }
 
-    private void saveFile(File file){
-        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
-            outputStream.writeObject(drawing.getChilds());
-            outputStream.close();
+    private void saveFile(File file) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
+            outputStream.writeObject(curves);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    private void loadFile(File file){
-        try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
-            ArrayList<Node> newDrawing = (ArrayList<Node>) inputStream.readObject();
-            drawing.clear();
-            drawing.addAll(newDrawing);
-            System.out.println(newDrawing);
-            inputStream.close();
+    private void loadFile(File file) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
+            ArrayList<Curve> newCurves = (ArrayList<Curve>) inputStream.readObject();
+
+            for (Curve newCurve : newCurves) {
+                CurvePoint a = new CurvePoint(newCurve.getA().getX(), newCurve.getA().getY(), newCurve.getA().getWeight());
+                CurvePoint b = new CurvePoint(newCurve.getB().getX(), newCurve.getB().getY(), newCurve.getB().getWeight());
+                CurvePoint c = new CurvePoint(newCurve.getC().getX(), newCurve.getC().getY(), newCurve.getC().getWeight());
+                CurvePoint d = new CurvePoint(newCurve.getD().getX(), newCurve.getD().getY(), newCurve.getD().getWeight());
+                Curve curve = new Curve(a, b, c, d);
+                curves.add(curve);
+                drawing.getChildren().add(curve);
+                loadConnect();
+            }
         } catch (ClassNotFoundException | IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void loadConnect() {
+        for (Curve curveA : curves) {
+            curves.stream().filter(curveB -> curveA != curveB).forEach(curveB -> {
+                for (CurvePoint pointA : curveA.getPoints()) {
+                    curveB.getPoints().stream().filter(pointB -> pointA != pointB).filter(pointA::equals).forEach(pointB -> {
+                        curveA.connect(pointB, pointA);
+                    });
+                }
+            });
         }
     }
 
@@ -578,20 +604,27 @@ public class MainController extends Controller implements Initializable {
             double x = event.getX();
             double y = event.getY();
             CurvePoint a = new CurvePoint(x, y, 1);
-            CurvePoint b = new CurvePoint(x, y, 1);
+            CurvePoint b = new CurvePoint(x + 30, y + 30, 1);
             groupPane.setOnMouseClicked(event1 -> {
                 double x1 = event1.getX();
                 double y1 = event1.getY();
-                CurvePoint c = new CurvePoint(x1, y1, 1);
+                CurvePoint c = new CurvePoint(x1 - 30, y1 - 30, 1);
                 CurvePoint d = new CurvePoint(x1, y1, 1);
-                Curve curve = new Curve(a, b, c ,d);
+                Curve curve = new Curve(a, b, c, d);
                 curves.add(curve);
                 drawing.getChildren().add(curve);
-                drawing.getChildren().addAll(new BoundLine(a, b));
-                drawing.getChildren().addAll(new BoundLine(d, c));
                 groupPane.setOnMouseClicked(null);
             });
         });
+    }
+
+    private static boolean isConnecting;
+
+    @FXML
+    private void connect() {
+        currPoint = null;
+        isConnecting = true;
+        curves.forEach(curve -> curve.getPoints().forEach(CurvePoint::startConnection));
     }
 
 }

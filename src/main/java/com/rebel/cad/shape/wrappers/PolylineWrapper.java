@@ -1,6 +1,8 @@
-package com.rebel.cad.shape;
+package com.rebel.cad.shape.wrappers;
 
 import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.shape.Point;
+import com.rebel.cad.shape.Transformable;
 import javafx.scene.shape.Polyline;
 
 import java.io.Serializable;
@@ -10,9 +12,9 @@ import java.util.List;
 /**
  * Created by Slava on 05.11.2015.
  */
-public class TPolyline extends Polyline implements Transformable, Serializable {
+public class PolylineWrapper extends Polyline implements Transformable, Serializable {
 
-    public TPolyline(double... points) {
+    public PolylineWrapper(double... points) {
         super(points);
     }
 
@@ -24,6 +26,10 @@ public class TPolyline extends Polyline implements Transformable, Serializable {
         return points;
     }
 
+    public void clear() {
+        getPoints().clear();
+    }
+
     public void addPoints(List<Point> points) {
         for (Point point : points) {
             getPoints().add(point.getX());
@@ -31,7 +37,14 @@ public class TPolyline extends Polyline implements Transformable, Serializable {
         }
     }
 
-    public void setDots(List<Point> points) {
+    public void addPoints(Point... points) {
+        for (Point point : points) {
+            getPoints().add(point.getX());
+            getPoints().add(point.getY());
+        }
+    }
+
+    public void setPoints(List<Point> points) {
         int count = 0;
         for (Point point : points) {
             getPoints().set(count, point.getX());
@@ -49,7 +62,7 @@ public class TPolyline extends Polyline implements Transformable, Serializable {
             point.setX(x1);
             point.setY(y1);
         }
-        setDots(points);
+        setPoints(points);
     }
 
     public void move(double x, double y) {
@@ -58,7 +71,7 @@ public class TPolyline extends Polyline implements Transformable, Serializable {
             point.setX(point.getX() + x);
             point.setY(point.getY() + y);
         }
-        setDots(points);
+        setPoints(points);
     }
 
 
@@ -73,7 +86,7 @@ public class TPolyline extends Polyline implements Transformable, Serializable {
             point.setX(MainController.toRealX((x * w + xx * wx * x0 + xy * wy * y0) / W));
             point.setY(MainController.toRealY((y * w + yx * wx * x0 + yy * wy * y0) / W));
         }
-        setDots(points);
+        setPoints(points);
         System.out.println(this);
     }
 
@@ -88,6 +101,6 @@ public class TPolyline extends Polyline implements Transformable, Serializable {
             point.setX(MainController.toRealX(x * xx + y * xy + x + dx));
             point.setY(MainController.toRealY(x * yx + y * yy + y + dy));
         }
-        setDots(points);
+        setPoints(points);
     }
 }

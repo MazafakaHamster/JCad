@@ -1,13 +1,14 @@
 package com.rebel.cad.shape;
 
 import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.shape.wrappers.PolylineWrapper;
 
 import java.util.ArrayList;
 
 /**
  * Created by Slava on 01.12.2015.
  */
-public class SuperEllipse extends TPolyline {
+public class SuperEllipse extends PolylineWrapper {
     private double centerX;
     private double centerY;
     private double a;

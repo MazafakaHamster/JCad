@@ -55,7 +55,7 @@ public class ShapeGroup extends Group implements Transformable, Serializable {
         getChildren().addAll(child);
     }
 
-    public void addAll(List<Node> child) {
+    public void addAll(List<? extends Node> child) {
         children.addAll(child);
         getChildren().addAll(child);
     }

@@ -1,21 +1,20 @@
 package com.rebel.cad.shape;
 
-import com.rebel.cad.util.DoubleProp;
-import javafx.beans.property.DoubleProperty;
+import com.rebel.cad.util.DoubleProperty;
 
 /**
  * Created by Slava on 15.12.2015.
  */
 public class WeightPoint extends Point {
-    private DoubleProp weight = new DoubleProp();
+    private DoubleProperty weight = new DoubleProperty();
 
     public WeightPoint(double x, double y, double weight) {
         super(x, y);
-        this.weight.set(weight);
+        this.weight.setValue(weight);
     }
 
     public double getWeight() {
-        return weight.doubleValue();
+        return weight.getValue();
     }
 
     public DoubleProperty getWeightProperty() {
@@ -23,7 +22,7 @@ public class WeightPoint extends Point {
     }
 
     public void setWeight(double weight) {
-        this.weight.set(weight);
+        this.weight.setValue(weight);
     }
 
     @Override

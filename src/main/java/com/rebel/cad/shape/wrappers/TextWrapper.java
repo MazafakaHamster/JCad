@@ -1,6 +1,7 @@
-package com.rebel.cad.shape;
+package com.rebel.cad.shape.wrappers;
 
 import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.shape.Transformable;
 import javafx.scene.text.Text;
 
 import java.io.Serializable;
@@ -9,9 +10,9 @@ import java.io.Serializable;
  * Created by Slava on 18.11.2015.
  */
 
-public class TText extends Text implements Transformable, Serializable {
+public class TextWrapper extends Text implements Transformable, Serializable {
 
-    public TText(double x, double y, String text) {
+    public TextWrapper(double x, double y, String text) {
         super(x, y, text);
     }
 
