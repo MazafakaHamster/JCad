@@ -55,9 +55,9 @@ public class CurvePoint extends ShapeGroup {
     public void restorePosition() {
         recording = false;
         if (getX() != tempX && getY() != tempY) {
-            setX(tempX);
-            setY(tempY);
-            setAnimation(tempX, getX(), tempY, getY(), 2000);
+            createAnimation(tempX, getX(), tempY, getY(), 2000);
+        } else {
+            animation = null;
         }
     }
 
@@ -65,9 +65,8 @@ public class CurvePoint extends ShapeGroup {
         return recording;
     }
 
-    public void setAnimation(double startX, double endX, double startY, double endY, double t) {
-        setX(startX);
-        setY(startY);
+    private void createAnimation(double startX, double endX, double startY, double endY, double t) {
+
         animation = new Transition() {
             {
                 setCycleDuration(Duration.millis(t));
