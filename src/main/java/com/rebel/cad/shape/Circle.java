@@ -12,6 +12,13 @@ public class Circle extends Arc {
         this.radius = r;
     }
 
+    public Circle(Point point, double r) {
+        super(point.getX(), point.getY(), r, 0, 360);
+        this.centerX = point.getX();
+        this.centerY = point.getY();
+        this.radius = r;
+    }
+
     public Circle(double x, double y, double r, Axis axis) {
         super(x, y, r, 0, 360, axis);
         this.centerX = x;

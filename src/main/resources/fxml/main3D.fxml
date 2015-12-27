@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.rebel.cad.collections.ShapeGroup?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -123,6 +123,40 @@
                                           <Label fx:id="yzAngle" text="-" />
                                        </children>
                                     </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="3D">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox minWidth="180.0" prefHeight="180.0" prefWidth="180.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="R1" />
+                                          <TextField fx:id="r1Text" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="R2" />
+                                          <TextField fx:id="r2Text" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="C" />
+                                          <TextField fx:id="cText" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#buildTorus" text="Torus" />
                                  </children>
                                  <padding>
                                     <Insets right="5.0" />

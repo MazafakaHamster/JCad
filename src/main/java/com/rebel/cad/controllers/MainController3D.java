@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController3D extends Controller implements Initializable {
 
@@ -67,6 +68,15 @@ public class MainController3D extends Controller implements Initializable {
     private Label yzAngle;
 
 
+
+    @FXML
+    private TextField r1Text;
+    @FXML
+    private TextField r2Text;
+    @FXML
+    private TextField cText;
+
+
     private ShapeGroup axises;
 
     public static double toRealX(double x) {
@@ -94,8 +104,6 @@ public class MainController3D extends Controller implements Initializable {
     private Double alpha = Math.toRadians(0);
     private Double beta = Math.toRadians(83);
     private Double gamma = Math.toRadians(83);
-
-    private List<Point3D> points3D = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -130,6 +138,11 @@ public class MainController3D extends Controller implements Initializable {
         alphaText.setText(Long.toString(Math.round(Math.toDegrees(alpha))));
         betaText.setText(Long.toString(Math.round(Math.toDegrees(beta))));
         gammaText.setText(Long.toString(Math.round(Math.toDegrees(gamma))));
+
+        r1Text.setText("200");
+        r2Text.setText("100");
+        cText.setText("100");
+        buildTorus();
     }
 
     private Line xAxis;
@@ -154,6 +167,45 @@ public class MainController3D extends Controller implements Initializable {
     }
 
     private Point pointR(double x, double y, double z) {
+        double[][] projectionMatrix = Utils.multiply(
+                Utils.multiply(
+                        new double[][]{
+                                {1, 0, 0},
+                                {0, Math.cos(beta), -Math.sin(beta)},
+                                {0, Math.sin(beta), Math.cos(beta)}
+                        },
+                        new double[][]{
+                                {Math.cos(alpha), 0, Math.sin(alpha)},
+                                {0, 1, 0},
+                                {-Math.sin(alpha), 0, Math.cos(alpha)}
+                        }),
+
+                new double[][]{
+                        {Math.cos(gamma), -Math.sin(gamma), 0},
+                        {Math.sin(gamma), Math.cos(gamma), 0},
+                        {0, 0, 1}
+                });
+
+        double[][] resultMatrix = Utils.multiply(
+                new double[][]{
+                        {1, 0, 0},
+                        {0, 1, 0},
+                        {0, 0, 1}},
+
+                Utils.multiply(projectionMatrix,
+                        new double[][]{
+                                {x},
+                                {y},
+                                {z},
+                        })
+        );
+        return new Point(toRealX(resultMatrix[0][0]), toRealY(-resultMatrix[1][0]));
+    }
+
+    private Point pointR(Point3D point3D) {
+        double x = point3D.getX();
+        double y = point3D.getY();
+        double z = point3D.getZ();
         double[][] projectionMatrix = Utils.multiply(
                 Utils.multiply(
                         new double[][]{
@@ -217,6 +269,71 @@ public class MainController3D extends Controller implements Initializable {
                 new Line(a7, a8),
                 new Line(a8, a5)
         );
+    }
+
+    @FXML
+    private void buildTorus() {
+        erase();
+        double R1 = Double.parseDouble(r1Text.getText());
+        double R2 = Double.parseDouble(r2Text.getText());
+        double stepU = 1;
+        double stepV = 0.1;
+        long vL = Math.round(2 * Math.PI / stepV);
+        double c = Double.parseDouble(cText.getText());
+        int coef = 6;
+        int uL = (int) (2 * Math.PI * coef / stepU + stepU);
+        double opacity = 0.1;
+
+        List<Point> points = new ArrayList<>();
+
+        for (int v = 0; v <= vL; v += 1) {
+            for (int u = 0; u < uL; u += 1) {
+                double v1 = v * stepV;
+                double u1 = u * stepU / coef;
+                points.add(pointR(
+                        TorusHelper.getX(R1, R2, v1, u1),
+                        TorusHelper.getY(R1, R2, v1, u1),
+                        TorusHelper.getZ(c, v1)));
+            }
+        }
+
+        for (int i = 0; i < points.size(); i++) {
+            if ((uL - i - 1) % uL == 0) {
+                drawing.getChildren().add(new Line(points.get(i), points.get(i - uL + 1), opacity));
+            } else {
+                drawing.getChildren().add(new Line(points.get(i), points.get(i + 1), opacity));
+            }
+        }
+//        drawing.getChildren().add(new Line(points.get(points.size() - 1), points.get(points.size() - (uL)), opacity));
+//
+//        for (int i = 0; i < points.size() - uL - 1; i++) {
+//            drawing.getChildren().add(new Line(points.get(i), points.get(i + uL + 1), opacity));
+//        }
+        clip();
+    }
+
+    private void project(List<Point3D> points3D, double zoom) {
+
+        for (int i = 0; i < points3D.size(); i++) {
+            double[] vec = new double[]{points3D.get(i).getX(), points3D.get(i).getY(), points3D.get(i).getZ()};
+            vec = Utils.multiply(new double[][]{
+                    {1, 0, 0},
+                    {0, Math.cos(beta), -Math.sin(beta)},
+                    {0, Math.sin(beta), Math.cos(beta)},
+            }, vec);
+            vec = Utils.multiply(new double[][]{
+                    {Math.cos(alpha), 0, Math.sin(alpha)},
+                    {0, 1, 0},
+                    {-Math.sin(alpha), 0, Math.cos(alpha)},
+            }, vec);
+            vec = Utils.multiply(new double[][]{
+                    {Math.cos(gamma), -Math.sin(gamma), 0},
+                    {Math.sin(gamma), Math.cos(gamma), 0},
+                    {0, 0, 1},
+            }, vec);
+            vec = Utils.multiply(new double[][]{{zoom, 0, 0}, {0, zoom, 0}, {0, 0, 0}}, vec);
+            points3D.set(i, new Point3D(vec[0], vec[1], vec[2]));
+        }
     }
 
     @FXML
@@ -352,7 +469,7 @@ public class MainController3D extends Controller implements Initializable {
         beta = Math.toRadians(Double.parseDouble(betaText.getText()));
         gamma = Math.toRadians(Double.parseDouble(gammaText.getText()));
         erase();
-        draw();
+        buildTorus();
         clip();
         angles();
     }

@@ -70,6 +70,13 @@ public class Line extends PolylineWrapper {
         this.end = end;
     }
 
+    public Line(Point start, Point end, double opacity) {
+        super(start.getX(), start.getY(), end.getX(), end.getY());
+        this.start = start;
+        this.end = end;
+        setOpacity(opacity);
+    }
+
     public Line(Point start, Point end, Color color) {
         super(start.getX(), start.getY(), end.getX(), end.getY());
         setStroke(color);

@@ -41,4 +41,17 @@ public class Utils {
 
         return c;
     }
+
+    public static double[] multiply(double[][] a, double[] b) {
+        double[] res = new double[3];
+        for (int i = 0; i < 3; i++) {
+            res[i] = 0;
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                res[i] += b[j] * a[j][i];
+            }
+        }
+        return res;
+    }
 }
