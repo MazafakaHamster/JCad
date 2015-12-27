@@ -68,7 +68,6 @@ public class MainController3D extends Controller implements Initializable {
     private Label yzAngle;
 
 
-
     @FXML
     private TextField r1Text;
     @FXML
@@ -276,39 +275,30 @@ public class MainController3D extends Controller implements Initializable {
         erase();
         double R1 = Double.parseDouble(r1Text.getText());
         double R2 = Double.parseDouble(r2Text.getText());
-        double stepU = 1;
-        double stepV = 0.1;
-        long vL = Math.round(2 * Math.PI / stepV);
-        double c = Double.parseDouble(cText.getText());
-        int coef = 6;
-        int uL = (int) (2 * Math.PI * coef / stepU + stepU);
+        double stepU = 90;
+        double stepV = 1;
+        double maxV = 360;
+        double maxU = 360;
         double opacity = 0.1;
 
         List<Point> points = new ArrayList<>();
 
-        for (int v = 0; v <= vL; v += 1) {
-            for (int u = 0; u < uL; u += 1) {
-                double v1 = v * stepV;
-                double u1 = u * stepU / coef;
+        for (int v = 0; v <= maxV; v += stepV) {
+            for (int u = 0; u <= maxU; u += stepU) {
                 points.add(pointR(
-                        TorusHelper.getX(R1, R2, v1, u1),
-                        TorusHelper.getY(R1, R2, v1, u1),
-                        TorusHelper.getZ(c, v1)));
+                        TorusHelper.getX(R1, R2, Math.toRadians(v), Math.toRadians(u)),
+                        TorusHelper.getY(R1, R2, Math.toRadians(v), Math.toRadians(u)),
+                        TorusHelper.getZ(R2, Math.toRadians(v))));
             }
         }
 
-        for (int i = 0; i < points.size(); i++) {
-            if ((uL - i - 1) % uL == 0) {
-                drawing.getChildren().add(new Line(points.get(i), points.get(i - uL + 1), opacity));
+        for (int i = 0; i < points.size() - 1; i++) {
+            if ((maxU / stepU - i - 1) % maxU == 0) {
+                drawing.getChildren().add(new Line(points.get(i), points.get(i - (int) (maxU / stepU) + 1), opacity));
             } else {
                 drawing.getChildren().add(new Line(points.get(i), points.get(i + 1), opacity));
             }
         }
-//        drawing.getChildren().add(new Line(points.get(points.size() - 1), points.get(points.size() - (uL)), opacity));
-//
-//        for (int i = 0; i < points.size() - uL - 1; i++) {
-//            drawing.getChildren().add(new Line(points.get(i), points.get(i + uL + 1), opacity));
-//        }
         clip();
     }
 
