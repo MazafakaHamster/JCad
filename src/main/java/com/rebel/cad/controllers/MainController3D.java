@@ -45,8 +45,6 @@ public class MainController3D extends Controller implements Initializable {
     @FXML
     private Label yCoord;
     @FXML
-    private TextField stepField;
-    @FXML
     private TextField rotateField;
     @FXML
     private TextField deltaX;
@@ -74,19 +72,19 @@ public class MainController3D extends Controller implements Initializable {
     private ShapeGroup axises;
 
     public static double toRealX(double x) {
-        return x + width / 2 + 50;
+        return x + width / 2;
     }
 
     public static double toFakeX(double x) {
-        return x - width / 2 - 50;
+        return x - width / 2;
     }
 
     public static double toRealY(double y) {
-        return -y + height / 2 + 100;
+        return -y + height / 2 + 50;
     }
 
     public static double toFakeY(double y) {
-        return -(y - height / 2 - 100);
+        return -(y - height / 2 - 50);
     }
 
     public static ShapeGroup getFigure() {
@@ -135,7 +133,6 @@ public class MainController3D extends Controller implements Initializable {
 
         aTorusText.setText("200");
         bTorusText.setText("100");
-        buildTorus();
     }
 
     private Line xAxis;
@@ -235,32 +232,39 @@ public class MainController3D extends Controller implements Initializable {
     }
 
     private void draw() {
-        Point a1 = pointR(0, 0, 0);
-        Point a2 = pointR(200, 0, 0);
-        Point a3 = pointR(200, 200, 0);
-        Point a4 = pointR(0, 200, 0);
+        Point bottom1 = pointR(0, 0, 0);
+        Point bottom2 = pointR(200, 0, 0);
+        Point bottom3 = pointR(200, 200, 0);
+        Point bottom4 = pointR(0, 200, 0);
 
-        Point a5 = pointR(0, 0, 200);
-        Point a6 = pointR(200, 0, 200);
-        Point a7 = pointR(200, 200, 200);
-        Point a8 = pointR(0, 200, 200);
+        Point top1 = pointR(0, 0, 200);
+        Point top2 = pointR(200, 0, 200);
+        Point top3 = pointR(200, 200, 200);
+        Point top4 = pointR(0, 200, 200);
+
+        Point roof1 = pointR(100, 100, 250);
 
 
         drawing.getChildren().addAll(
-                new Line(a1, a2),
-                new Line(a2, a3),
-                new Line(a3, a4),
-                new Line(a4, a1),
+                new Line(bottom1, bottom2),
+                new Line(bottom2, bottom3),
+                new Line(bottom3, bottom4),
+                new Line(bottom4, bottom1),
 
-                new Line(a1, a5),
-                new Line(a2, a6),
-                new Line(a3, a7),
-                new Line(a4, a8),
+                new Line(bottom1, top1),
+                new Line(bottom2, top2),
+                new Line(bottom3, top3),
+                new Line(bottom4, top4),
 
-                new Line(a5, a6),
-                new Line(a6, a7),
-                new Line(a7, a8),
-                new Line(a8, a5)
+                new Line(top1, top2),
+                new Line(top2, top3),
+                new Line(top3, top4),
+                new Line(top4, top1),
+
+                new Line(top1, roof1),
+                new Line(top2, roof1),
+                new Line(top3, roof1),
+                new Line(top4, roof1)
         );
     }
 
@@ -453,7 +457,8 @@ public class MainController3D extends Controller implements Initializable {
         beta = Math.toRadians(Double.parseDouble(betaText.getText()));
         gamma = Math.toRadians(Double.parseDouble(gammaText.getText()));
         erase();
-        buildTorus();
+//        buildTorus();
+        draw();
         clip();
         angles();
     }
