@@ -272,13 +272,13 @@ public class MainController3D extends Controller implements Initializable {
         double stepU = 90;
         double stepV = 1;
         double maxV = 360;
-        double maxU = 360;
+        double maxU = 225;
         double opacity = 0.1;
 
         List<Point> points = new ArrayList<>();
 
         for (int v = 0; v <= maxV; v += stepV) {
-            for (int u = 0; u <= maxU; u += stepU) {
+            for (int u = -135; u <= maxU; u += stepU) {
                 points.add(pointR(
                         TorusHelper.getX(R1, R2, Math.toRadians(v), Math.toRadians(u)),
                         TorusHelper.getY(R1, R2, Math.toRadians(v), Math.toRadians(u)),
