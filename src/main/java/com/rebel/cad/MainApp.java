@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 /**
  * Created by Slava on 04.09.2015.
  */
-public class MainApp2D extends Application {
+public class MainApp extends Application {
 
     public final static int INITIAL_WIDTH = 800;
     public final static int INITIAL_HEIGHT = 600;

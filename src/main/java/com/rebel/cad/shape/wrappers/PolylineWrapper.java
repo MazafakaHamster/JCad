@@ -1,6 +1,6 @@
 package com.rebel.cad.shape.wrappers;
 
-import com.rebel.cad.controllers.MainController2D;
+import com.rebel.cad.controllers.MainController;
 import com.rebel.cad.shape.Point;
 import com.rebel.cad.shape.Transformable;
 import javafx.scene.shape.Polyline;
@@ -78,13 +78,13 @@ public class PolylineWrapper extends Polyline implements Transformable, Serializ
     public void project(double xx, double xy, double wx, double yx, double yy, double wy, double x, double y, double w) {
         List<Point> points = getDots();
         for (Point point : points) {
-            double x0 = MainController2D.toFakeX(point.getX());
-            double y0 = MainController2D.toFakeY(point.getY());
+            double x0 = MainController.toFakeX(point.getX());
+            double y0 = MainController.toFakeY(point.getY());
 
             double W = w + wx * x0 + wy * y0;
 
-            point.setX(MainController2D.toRealX((x * w + xx * wx * x0 + xy * wy * y0) / W));
-            point.setY(MainController2D.toRealY((y * w + yx * wx * x0 + yy * wy * y0) / W));
+            point.setX(MainController.toRealX((x * w + xx * wx * x0 + xy * wy * y0) / W));
+            point.setY(MainController.toRealY((y * w + yx * wx * x0 + yy * wy * y0) / W));
         }
         setPoints(points);
         System.out.println(this);
@@ -95,11 +95,11 @@ public class PolylineWrapper extends Polyline implements Transformable, Serializ
         List<Point> points = getDots();
         for (Point point : points) {
 
-            double x = MainController2D.toFakeX(point.getX());
-            double y = MainController2D.toFakeY(point.getY());
+            double x = MainController.toFakeX(point.getX());
+            double y = MainController.toFakeY(point.getY());
 
-            point.setX(MainController2D.toRealX(x * xx + y * xy + x + dx));
-            point.setY(MainController2D.toRealY(x * yx + y * yy + y + dy));
+            point.setX(MainController.toRealX(x * xx + y * xy + x + dx));
+            point.setY(MainController.toRealY(x * yx + y * yy + y + dy));
         }
         setPoints(points);
     }

@@ -1,6 +1,6 @@
 package com.rebel.cad.shape.impl;
 
-import com.rebel.cad.controllers.MainController2D;
+import com.rebel.cad.controllers.MainController;
 import com.rebel.cad.shape.Point;
 import com.rebel.cad.shape.Line;
 import com.rebel.cad.shape.Normal;
@@ -18,10 +18,10 @@ public class SuperEllipseNormal extends Line implements Normal {
         List<Point> points = new ArrayList<>();
         for (double x = x0 - 50; x < x0 + 50; x += 0.5) {
             double y;
-            if (MainController2D.toRealY(y0) < 0) {
-                y = MainController2D.toRealY(-ellipse.function(x0)) - (x - x0) / ellipse.derivative(x0, y0);
+            if (MainController.toRealY(y0) < 0) {
+                y = MainController.toRealY(-ellipse.function(x0)) - (x - x0) / ellipse.derivative(x0, y0);
             } else {
-                y = MainController2D.toRealY(ellipse.function(x0)) - (x - x0) / ellipse.derivative(x0, y0);
+                y = MainController.toRealY(ellipse.function(x0)) - (x - x0) / ellipse.derivative(x0, y0);
             }
             points.add(new Point(x, y));
         }
