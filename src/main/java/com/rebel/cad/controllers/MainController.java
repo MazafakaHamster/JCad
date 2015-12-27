@@ -6,7 +6,7 @@ import com.rebel.cad.shape.*;
 import com.rebel.cad.shape.impl.SuperEllipseNormal;
 import com.rebel.cad.shape.impl.SuperEllipseTangent;
 import com.rebel.cad.shape.wrappers.TextWrapper;
-import com.rebel.cad.util.Helper;
+import com.rebel.cad.util.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -257,8 +257,8 @@ public class MainController extends Controller implements Initializable {
         double radius = 30;
         double y = centerDot.getCenterY() + figureHeight / 2 - radius;
         double x = centerDot.getCenterX() - figureHeight / 3;
-        Point pointOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
-        Point pointOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
+        Point pointOnFirstCircle = Utils.getDotOnArc(x, y, radius, 300);
+        Point pointOnLastCircle = Utils.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
             drawing.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
@@ -274,8 +274,8 @@ public class MainController extends Controller implements Initializable {
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
         drawing.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
-        Point topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
-        Point topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
+        Point topStart = Utils.getDotOnArc(x, y, figureHeight / 14, 190);
+        Point topEnd = Utils.getDotOnArc(x, y, figureHeight / 14, 350);
 
         double radius2 = 60;
         y = centerDot.getCenterY();
@@ -312,8 +312,8 @@ public class MainController extends Controller implements Initializable {
         double radius = 30;
         double y = centerDot.getCenterY() + figureHeight / 2 - radius;
         double x = centerDot.getCenterX() - figureHeight / 3;
-        Point pointOnFirstCircle = Helper.getDotOnArc(x, y, radius, 300);
-        Point pointOnLastCircle = Helper.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
+        Point pointOnFirstCircle = Utils.getDotOnArc(x, y, radius, 300);
+        Point pointOnLastCircle = Utils.getDotOnArc(x + figureHeight / 1.5, y, radius, 250);
         for (int i = 0; i < 5; i++) {
             drawing.getChildren().add(new Circle(x, y, radius));//, Axis.Both));
             x += figureHeight / 6;
@@ -329,8 +329,8 @@ public class MainController extends Controller implements Initializable {
         x = centerDot.getCenterX();
         y = centerDot.getCenterY() - figureHeight / 2 + figureHeight / 14;
         drawing.getChildren().add(new Arc(x, y, figureHeight / 14, 190, 350));//, Axis.Both));
-        Point topStart = Helper.getDotOnArc(x, y, figureHeight / 14, 190);
-        Point topEnd = Helper.getDotOnArc(x, y, figureHeight / 14, 350);
+        Point topStart = Utils.getDotOnArc(x, y, figureHeight / 14, 190);
+        Point topEnd = Utils.getDotOnArc(x, y, figureHeight / 14, 350);
 
         double radius2 = 60;
         y = centerDot.getCenterY();

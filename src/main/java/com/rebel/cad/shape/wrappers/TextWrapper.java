@@ -1,6 +1,7 @@
 package com.rebel.cad.shape.wrappers;
 
 import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.shape.Point;
 import com.rebel.cad.shape.Transformable;
 import javafx.scene.text.Text;
 
@@ -14,6 +15,10 @@ public class TextWrapper extends Text implements Transformable, Serializable {
 
     public TextWrapper(double x, double y, String text) {
         super(x, y, text);
+    }
+
+    public TextWrapper(Point point, String text) {
+        super(point.getX(), point.getY(), text);
     }
 
     public void rotate(double x, double y, double degrees) {

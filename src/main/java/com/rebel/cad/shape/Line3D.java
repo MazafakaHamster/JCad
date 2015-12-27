@@ -11,22 +11,22 @@ import java.util.List;
 /**
  * Created by Slava on 07.10.2015.
  */
-public class Line extends PolylineWrapper {
+public class Line3D extends PolylineWrapper {
 
     private Point start = new Point();
     private Point end = new Point();
     private LocalChangeListener listener = new LocalChangeListener();
 
-    public Line(double... points) {
+    public Line3D(double... points) {
         super(points);
     }
 
-    public Line(List<Point> points) {
+    public Line3D(List<Point> points) {
         super();
         addPoints(points);
     }
 
-    public Line(double x1, double y1, double x2, double y2, double opacity) {
+    public Line3D(double x1, double y1, double x2, double y2, double opacity) {
         this.start = new Point(x1, y1);
         this.end = new Point(x2, y2);
         start.getXProperty().addListener(listener);
@@ -37,7 +37,7 @@ public class Line extends PolylineWrapper {
         build();
     }
 
-    public Line(CurvePoint a, CurvePoint b) {
+    public Line3D(CurvePoint a, CurvePoint b) {
         this.start = new Point(a.getX(), a.getY());
         this.end = new Point(b.getX(), b.getY());
         a.getXProperty().bind(startXProperty());
@@ -64,25 +64,13 @@ public class Line extends PolylineWrapper {
         return end.getYProperty();
     }
 
-    public Line(Point start, Point end) {
+    public Line3D(Point start, Point end) {
         super(start.getX(), start.getY(), end.getX(), end.getY());
-        this.start = start;
-        this.end = end;
     }
 
-    public Line(Point start, Point end, Color color) {
+    public Line3D(Point start, Point end, Color color) {
         super(start.getX(), start.getY(), end.getX(), end.getY());
         setStroke(color);
-        this.start = start;
-        this.end = end;
-    }
-
-    public Point getStart() {
-        return start;
-    }
-
-    public Point getEnd() {
-        return end;
     }
 
     private void build() {

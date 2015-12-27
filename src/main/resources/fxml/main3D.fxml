@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.rebel.cad.collections.ShapeGroup?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox fx:id="rootBox" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController3D">
-    <children>
-        <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
+<BorderPane fx:id="rootPane" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController3D">
+    <bottom>
+        <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="46.0" prefWidth="800.0" spacing="15.0" style="-fx-background-color: #EEEEEE;" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="eraseButton" mnemonicParsing="false" onAction="#erase" text="Erase" />
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <Button mnemonicParsing="false" onAction="#load" text="Load" />
+                <Label text="X:">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label text="-" fx:id="xCoord">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label text="Y:">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label fx:id="yCoord" text="-">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
             </children>
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
             <padding>
-                <Insets left="20.0" />
+                <Insets left="20.0" top="6.0" />
             </padding>
         </HBox>
-        <HBox>
+    </bottom>
+    <right>
+        <HBox BorderPane.alignment="CENTER">
             <children>
-                <Pane fx:id="groupPane">
-                    <children>
-                        <ShapeGroup fx:id="drawing" autoSizeChildren="false" />
-                    </children>
-                </Pane>
                 <Accordion>
                     <panes>
-                        <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="Euclid">
+                        <TitledPane expanded="false" minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="Euclid">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -70,36 +78,85 @@
                                 </AnchorPane>
                             </content>
                         </TitledPane>
+                  <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="3D">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox minWidth="180.0" prefHeight="180.0" prefWidth="180.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="Alpha" />
+                                          <TextField fx:id="alphaText" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="Beta" />
+                                          <TextField fx:id="betaText" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="Gamma" />
+                                          <TextField fx:id="gammaText" prefHeight="25.0" prefWidth="105.0" />
+                                       </children>
+                                    </HBox>
+                                    <Button mnemonicParsing="false" onAction="#transform" text="Transform" />
+                                    <Separator prefWidth="200.0" />
+                                    <Label text="Angles:" />
+                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="XY:" />
+                                          <Label text="-" fx:id="xyAngle" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="XZ:" />
+                                          <Label text="-" fx:id="xzAngle" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0">
+                                       <children>
+                                          <Label text="YZ:" />
+                                          <Label fx:id="yzAngle" text="-" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
                     </panes>
                 </Accordion>
             </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="46.0" prefWidth="800.0" spacing="15.0" style="-fx-background-color: #EEEEEE;">
+    </right>
+    <top>
+        <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Label text="X:">
-                    <font>
-                        <Font size="13.0" />
-                    </font>
-                </Label>
-                <Label text="-" fx:id="xCoord">
-                    <font>
-                        <Font size="13.0" />
-                    </font>
-                </Label>
-                <Label text="Y:">
-                    <font>
-                        <Font size="13.0" />
-                    </font>
-                </Label>
-                <Label fx:id="yCoord" text="-">
-                    <font>
-                        <Font size="13.0" />
-                    </font>
-                </Label>
+                <Button fx:id="eraseButton" mnemonicParsing="false" onAction="#erase" text="Erase" />
+                <Separator orientation="VERTICAL" prefHeight="200.0" />
+                <Button mnemonicParsing="false" onAction="#load" text="Load" />
             </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
             <padding>
-                <Insets left="20.0" top="6.0" />
+                <Insets left="20.0" />
             </padding>
         </HBox>
-    </children>
-</VBox>
+    </top>
+    <center>
+        <Pane fx:id="groupPane" BorderPane.alignment="CENTER">
+            <children>
+                <ShapeGroup fx:id="drawing" autoSizeChildren="false" />
+            </children>
+        </Pane>
+    </center>
+</BorderPane>
