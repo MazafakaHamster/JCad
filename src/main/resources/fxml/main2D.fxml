@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.rebel.cad.collections.ShapeGroup?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import com.rebel.cad.collections.ShapeGroup?>
-<VBox fx:id="rootBox" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController2D">
+<VBox fx:id="rootBox" prefHeight="561.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rebel.cad.controllers.MainController">
     <children>
         <HBox fx:id="menuBox" alignment="CENTER_LEFT" minHeight="50.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="1024.0" spacing="20.0">
             <children>
@@ -271,6 +270,13 @@
                                        </children>
                                     </HBox>
                                     <Button mnemonicParsing="false" onAction="#saveWeight" prefHeight="25.0" prefWidth="147.0" text="Save" />
+                                    <Separator prefWidth="200.0" />
+                                    <HBox alignment="CENTER" prefHeight="32.0" prefWidth="159.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Smootheness:" />
+                                          <ToggleButton mnemonicParsing="false" onAction="#smoothToogle" text="Smooth" />
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </children>

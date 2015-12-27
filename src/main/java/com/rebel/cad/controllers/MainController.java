@@ -119,6 +119,8 @@ public class MainController extends Controller implements Initializable {
     private ShapeGroup axises;
     private int step = 20;
 
+    public static boolean smooth = false;
+
     public static double toRealX(double x) {
         return x + width / 2 - 90;
     }
@@ -133,6 +135,11 @@ public class MainController extends Controller implements Initializable {
 
     public static double toFakeY(double y) {
         return -(y - height / 2);
+    }
+
+    @FXML
+    private void smoothToogle() {
+        smooth = !smooth;
     }
 
     public static ShapeGroup getFigure() {
@@ -244,11 +251,6 @@ public class MainController extends Controller implements Initializable {
         drawing.getChildren().removeAll(drawing.getChildren());
         drawing.getChildren().clear();
         curves.clear();
-//        drawing.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
-//        axises.project(width, height / 2, 0.01, width / 2, height, 0.01, width/2, height/2, 0.01);
-//        grid.project(width, height/2, 0.01, width/2, height, 0.01, width/2, height/2, 0.01);
-//        clip();
-
     }
 
     private void drawFigure(List<HintedDot> dots) {

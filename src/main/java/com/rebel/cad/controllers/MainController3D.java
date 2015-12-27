@@ -63,7 +63,6 @@ public class MainController3D extends Controller implements Initializable {
     @FXML
     private Label yzAngle;
 
-
     @FXML
     private TextField aTorusText;
     @FXML
@@ -125,6 +124,30 @@ public class MainController3D extends Controller implements Initializable {
                 drawing.move(0, delta / 2);
             resize();
         });
+
+        rootPane.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case NUMPAD7:
+                    centerPoint.setX(centerPoint.getX() + 1);
+                    break;
+                case NUMPAD9:
+                    centerPoint.setX(centerPoint.getX() - 1);
+                    break;
+                case NUMPAD4:
+                    centerPoint.setY(centerPoint.getY() + 1);
+                    break;
+                case NUMPAD6:
+                    centerPoint.setY(centerPoint.getY() - 1);
+                    break;
+                case NUMPAD8:
+                    centerPoint.setZ(centerPoint.getZ() + 1);
+                    break;
+                case NUMPAD2:centerPoint.setZ(centerPoint.getZ() - 1);
+                    break;
+            }
+            transform();
+        });
+
         staticFigure = drawing;
 
         alphaText.setText(Long.toString(Math.round(Math.toDegrees(alpha))));
@@ -154,6 +177,42 @@ public class MainController3D extends Controller implements Initializable {
         axis.getChildren().add(new TextWrapper(pointR(0, 20, length - 50), "Z"));
 
         return axis;
+    }
+
+    private Point pointR(double x, double y, double z, Point3D center) {
+        double[][] projectionMatrix = Utils.multiply(
+                Utils.multiply(
+                        new double[][]{
+                                {1, 0, 0},
+                                {0, Math.cos(beta), -Math.sin(beta)},
+                                {0, Math.sin(beta), Math.cos(beta)}
+                        },
+                        new double[][]{
+                                {Math.cos(alpha), 0, Math.sin(alpha)},
+                                {0, 1, 0},
+                                {-Math.sin(alpha), 0, Math.cos(alpha)}
+                        }),
+
+                new double[][]{
+                        {Math.cos(gamma), -Math.sin(gamma), 0},
+                        {Math.sin(gamma), Math.cos(gamma), 0},
+                        {0, 0, 1}
+                });
+
+        double[][] resultMatrix = Utils.multiply(
+                new double[][]{
+                        {1, 0, 0},
+                        {0, 1, 0},
+                        {0, 0, 1}},
+
+                Utils.multiply(projectionMatrix,
+                        new double[][]{
+                                {x + center.getX()},
+                                {y + center.getY()},
+                                {z + center.getZ()},
+                        })
+        );
+        return new Point(toRealX(resultMatrix[0][0]), toRealY(-resultMatrix[1][0]));
     }
 
     private Point pointR(double x, double y, double z) {
@@ -231,18 +290,20 @@ public class MainController3D extends Controller implements Initializable {
         return new Point(toRealX(resultMatrix[0][0]), toRealY(-resultMatrix[1][0]));
     }
 
+    Point3D centerPoint = new Point3D(0, 0, 0);
+
     private void draw() {
-        Point bottom1 = pointR(0, 0, 0);
-        Point bottom2 = pointR(200, 0, 0);
-        Point bottom3 = pointR(200, 200, 0);
-        Point bottom4 = pointR(0, 200, 0);
+        Point bottom1 = pointR(0, 0, 0, centerPoint);
+        Point bottom2 = pointR(200, 0, 0, centerPoint);
+        Point bottom3 = pointR(200, 200, 0, centerPoint);
+        Point bottom4 = pointR(0, 200, 0, centerPoint);
 
-        Point top1 = pointR(0, 0, 200);
-        Point top2 = pointR(200, 0, 200);
-        Point top3 = pointR(200, 200, 200);
-        Point top4 = pointR(0, 200, 200);
+        Point top1 = pointR(0, 0, 200, centerPoint);
+        Point top2 = pointR(200, 0, 200, centerPoint);
+        Point top3 = pointR(200, 200, 200, centerPoint);
+        Point top4 = pointR(0, 200, 200, centerPoint);
 
-        Point roof1 = pointR(100, 100, 250);
+        Point roof1 = pointR(100, 100, 250, centerPoint);
 
 
         drawing.getChildren().addAll(
@@ -286,7 +347,7 @@ public class MainController3D extends Controller implements Initializable {
                 points.add(pointR(
                         TorusHelper.getX(R1, R2, Math.toRadians(v), Math.toRadians(u)),
                         TorusHelper.getY(R1, R2, Math.toRadians(v), Math.toRadians(u)),
-                        TorusHelper.getZ(R2, Math.toRadians(v))));
+                        TorusHelper.getZ(R2, Math.toRadians(v)), centerPoint));
             }
         }
 
@@ -298,30 +359,6 @@ public class MainController3D extends Controller implements Initializable {
             }
         }
         clip();
-    }
-
-    private void project(List<Point3D> points3D, double zoom) {
-
-        for (int i = 0; i < points3D.size(); i++) {
-            double[] vec = new double[]{points3D.get(i).getX(), points3D.get(i).getY(), points3D.get(i).getZ()};
-            vec = Utils.multiply(new double[][]{
-                    {1, 0, 0},
-                    {0, Math.cos(beta), -Math.sin(beta)},
-                    {0, Math.sin(beta), Math.cos(beta)},
-            }, vec);
-            vec = Utils.multiply(new double[][]{
-                    {Math.cos(alpha), 0, Math.sin(alpha)},
-                    {0, 1, 0},
-                    {-Math.sin(alpha), 0, Math.cos(alpha)},
-            }, vec);
-            vec = Utils.multiply(new double[][]{
-                    {Math.cos(gamma), -Math.sin(gamma), 0},
-                    {Math.sin(gamma), Math.cos(gamma), 0},
-                    {0, 0, 1},
-            }, vec);
-            vec = Utils.multiply(new double[][]{{zoom, 0, 0}, {0, zoom, 0}, {0, 0, 0}}, vec);
-            points3D.set(i, new Point3D(vec[0], vec[1], vec[2]));
-        }
     }
 
     @FXML
@@ -452,13 +489,50 @@ public class MainController3D extends Controller implements Initializable {
     }
 
     @FXML
+    private void xPlus() {
+        alphaText.setText(Long.toString(Math.round(Math.toDegrees(alpha) + 1)));
+        transform();
+
+    }
+
+    @FXML
+    private void xMinus() {
+        alphaText.setText(Long.toString(Math.round(Math.toDegrees(alpha) - 1)));
+        transform();
+    }
+
+    @FXML
+    private void yPlus() {
+        betaText.setText(Long.toString(Math.round(Math.toDegrees(beta) + 1)));
+        transform();
+    }
+
+    @FXML
+    private void yMinus() {
+        betaText.setText(Long.toString(Math.round(Math.toDegrees(beta) - 1)));
+        transform();
+    }
+
+    @FXML
+    private void zPlus() {
+        gammaText.setText(Long.toString(Math.round(Math.toDegrees(gamma) + 1)));
+        transform();
+    }
+
+    @FXML
+    private void zMinus() {
+        gammaText.setText(Long.toString(Math.round(Math.toDegrees(gamma) - 1)));
+        transform();
+    }
+
+    @FXML
     private void transform() {
         alpha = Math.toRadians(Double.parseDouble(alphaText.getText()));
         beta = Math.toRadians(Double.parseDouble(betaText.getText()));
         gamma = Math.toRadians(Double.parseDouble(gammaText.getText()));
         erase();
-//        buildTorus();
-        draw();
+        buildTorus();
+//        draw();
         clip();
         angles();
     }

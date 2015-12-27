@@ -1,7 +1,7 @@
 package com.rebel.cad.shape;
 
 import com.rebel.cad.collections.ShapeGroup;
-import com.rebel.cad.shape.wrappers.LineWrapper;
+import com.rebel.cad.controllers.MainController;
 import com.rebel.cad.util.DoubleChangeListener;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -23,6 +23,7 @@ public class Curve extends ShapeGroup implements Serializable {
     private BoundLine ab;
     private BoundLine dc;
     private Line line;
+    private LocalChangeListenerC listener = new LocalChangeListenerC();
 
     public Curve(CurvePoint a, CurvePoint b, CurvePoint c, CurvePoint d) {
         this.a = a;
@@ -30,12 +31,12 @@ public class Curve extends ShapeGroup implements Serializable {
         this.c = c;
         this.d = d;
         this.line = new Line();
-        LocalChangeListener listener = new LocalChangeListener();
 
         a.addListener(listener);
         b.addListener(listener);
         c.addListener(listener);
         d.addListener(listener);
+
         ab = new BoundLine(a, b);
         dc = new BoundLine(d, c);
         getChildren().addAll(ab);
@@ -165,10 +166,60 @@ public class Curve extends ShapeGroup implements Serializable {
                 '}';
     }
 
-    private class LocalChangeListener implements DoubleChangeListener, Serializable {
+    private Curve getThis() {
+        return this;
+    }
+
+    private class LocalChangeListenerC implements DoubleChangeListener, Serializable {
         @Override
         public void changed(double oldValue, double newValue) {
             build();
+            if (MainController.smooth)
+            for (Curve curve : MainController.curves) {
+                if (getThis() != curve) {
+                    if (curve.getD() == getA()) {
+                        return;
+                    }
+                    if (curve.getA() == getD()) {
+                        double lambda =
+                                Math.sqrt(Math.pow(curve.getD().getX() - curve.getA().getX(), 2) + Math.pow(curve.getD().getY() - curve.getA().getY(), 2))
+                                        / Math.sqrt(Math.pow(getThis().getD().getX() - getThis().getA().getX(), 2) + Math.pow(getThis().getD().getY() - getThis().getA().getY(), 2));
+                        lambda *= lambda;
+                        double bigWeightR0 = (6 * curve.getA().getWeight() * (curve.getB().getWeight() + curve.getC().getWeight()) -
+                                18 * Math.pow(curve.getB().getWeight(), 2)) / Math.pow(curve.getA().getWeight(), 2);
+                        double littleWeightR0 = 6 * curve.getC().getWeight() / curve.getA().getWeight();
+
+                        double bigWeightR1 = (6 * getThis().getD().getWeight() * (getThis().getB().getWeight() + getThis().getC().getWeight()) -
+                                18 * Math.pow(getThis().getC().getWeight(), 2)) / Math.pow(getThis().getD().getWeight(), 2);
+                        double littleWeightR1 = 6 * getThis().getB().getWeight() / getThis().getD().getWeight();
+
+                        double rightPartX = lambda * (bigWeightR0 * (getThis().getC().getX() - getThis().getD().getX()) + littleWeightR0 * (getThis().getB().getX() - getThis().getC().getX()));
+                        double rightPartY = lambda * (bigWeightR0 * (getThis().getC().getY() - getThis().getD().getY()) + littleWeightR0 * (getThis().getB().getY() - getThis().getC().getY()));
+
+                        double x = (rightPartX + littleWeightR1 * curve.getB().getX() - bigWeightR1 * (curve.getB().getX() - curve.getA().getX())) / littleWeightR1;
+                        double y = (rightPartY + littleWeightR1 * curve.getB().getY() - bigWeightR1 * (curve.getB().getY() - curve.getA().getY())) / littleWeightR1;
+
+                        curve.getC().setX(x);
+                        curve.getC().setY(y);
+
+
+                        lambda =
+                                Math.sqrt(Math.pow(curve.getD().getX() - curve.getA().getX(), 2) + Math.pow(curve.getD().getY() - curve.getA().getY(), 2))
+                                        / Math.sqrt(Math.pow(getThis().getD().getX() - getThis().getA().getX(), 2) + Math.pow(getThis().getD().getY() - getThis().getA().getY(), 2));
+
+                        double rSh1X = lambda * getThis().getC().getWeight() / getThis().getD().getWeight() * (getThis().getD().getX() - getThis().getC().getX()) * curve.getA().getWeight() / curve.getB().getWeight();
+                        double rSh1Y = lambda * getThis().getC().getWeight() / getThis().getD().getWeight() * (getThis().getD().getY() - getThis().getC().getY()) * curve.getA().getWeight() / curve.getB().getWeight();
+                        double x1 = rSh1X + curve.getA().getX();
+                        double y1 = rSh1Y + curve.getA().getY();
+
+
+                        curve.getB().setX(x1);
+                        curve.getB().setY(y1);
+
+                        return;
+                    }
+                }
+            }
         }
     }
 }

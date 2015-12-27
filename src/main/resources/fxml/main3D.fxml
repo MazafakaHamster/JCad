@@ -123,6 +123,28 @@
                                           <Label fx:id="yzAngle" text="-" />
                                        </children>
                                     </HBox>
+                                    <Separator prefWidth="200.0" />
+                                    <HBox alignment="CENTER" prefHeight="29.0" prefWidth="154.0" spacing="10.0">
+                                       <children>
+                                          <Label text="X" />
+                                          <Button mnemonicParsing="false" onAction="#xPlus" text="+" />
+                                          <Button mnemonicParsing="false" onAction="#xMinus" prefHeight="25.0" prefWidth="27.0" text="-" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="29.0" prefWidth="154.0" spacing="10.0">
+                                       <children>
+                                          <Label text="Y" />
+                                          <Button mnemonicParsing="false" onAction="#yPlus" text="+" />
+                                          <Button mnemonicParsing="false" onAction="#yMinus" prefHeight="25.0" prefWidth="27.0" text="-" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="29.0" prefWidth="154.0" spacing="10.0">
+                                       <children>
+                                          <Label text="Z" />
+                                          <Button mnemonicParsing="false" onAction="#zPlus" text="+" />
+                                          <Button mnemonicParsing="false" onAction="#zMinus" prefHeight="25.0" prefWidth="27.0" text="-" />
+                                       </children>
+                                    </HBox>
                                  </children>
                                  <padding>
                                     <Insets right="5.0" />
