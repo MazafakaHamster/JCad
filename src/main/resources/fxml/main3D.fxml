@@ -132,7 +132,7 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
-                  <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="3D">
+                  <TitledPane minWidth="180.0" prefHeight="206.0" prefWidth="180.0" text="Torus">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -140,20 +140,14 @@
                                  <children>
                                     <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                        <children>
-                                          <Label text="R1" />
-                                          <TextField fx:id="r1Text" prefHeight="25.0" prefWidth="105.0" />
+                                          <Label text="A" />
+                                          <TextField fx:id="aTorusText" prefHeight="25.0" prefWidth="105.0" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" spacing="5.0">
                                        <children>
-                                          <Label text="R2" />
-                                          <TextField fx:id="r2Text" prefHeight="25.0" prefWidth="105.0" />
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                                       <children>
-                                          <Label text="C" />
-                                          <TextField fx:id="cText" prefHeight="25.0" prefWidth="105.0" />
+                                          <Label text="B" />
+                                          <TextField fx:id="bTorusText" prefHeight="25.0" prefWidth="105.0" />
                                        </children>
                                     </HBox>
                                     <Button mnemonicParsing="false" onAction="#buildTorus" text="Torus" />

@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
-import sun.plugin2.util.ColorUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class MainController3D extends Controller implements Initializable {
 
@@ -69,12 +67,9 @@ public class MainController3D extends Controller implements Initializable {
 
 
     @FXML
-    private TextField r1Text;
+    private TextField aTorusText;
     @FXML
-    private TextField r2Text;
-    @FXML
-    private TextField cText;
-
+    private TextField bTorusText;
 
     private ShapeGroup axises;
 
@@ -138,9 +133,8 @@ public class MainController3D extends Controller implements Initializable {
         betaText.setText(Long.toString(Math.round(Math.toDegrees(beta))));
         gammaText.setText(Long.toString(Math.round(Math.toDegrees(gamma))));
 
-        r1Text.setText("200");
-        r2Text.setText("100");
-        cText.setText("100");
+        aTorusText.setText("200");
+        bTorusText.setText("100");
         buildTorus();
     }
 
@@ -273,8 +267,8 @@ public class MainController3D extends Controller implements Initializable {
     @FXML
     private void buildTorus() {
         erase();
-        double R1 = Double.parseDouble(r1Text.getText());
-        double R2 = Double.parseDouble(r2Text.getText());
+        double R1 = Double.parseDouble(aTorusText.getText());
+        double R2 = Double.parseDouble(bTorusText.getText());
         double stepU = 90;
         double stepV = 1;
         double maxV = 360;
