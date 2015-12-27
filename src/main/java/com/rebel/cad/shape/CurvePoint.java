@@ -1,8 +1,8 @@
 package com.rebel.cad.shape;
 
-import com.rebel.cad.MainApp;
+import com.rebel.cad.MainApp2D;
 import com.rebel.cad.collections.ShapeGroup;
-import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.controllers.MainController2D;
 import com.rebel.cad.shape.wrappers.CircleWrapper;
 import com.rebel.cad.util.DoubleChangeListener;
 import com.rebel.cad.util.DoubleProperty;
@@ -104,31 +104,31 @@ public class CurvePoint extends ShapeGroup {
 
     private void enableDrag() {
         final Delta dragDelta = new Delta();
-        getCircle().setOnMouseClicked(mouseEvent -> MainController.setCurrPoint(this));
+        getCircle().setOnMouseClicked(mouseEvent -> MainController2D.setCurrPoint(this));
         getCircle().setOnMousePressed(mouseEvent -> {
             dragDelta.x = getCircle().getCenterX() - mouseEvent.getX();
             dragDelta.y = getCircle().getCenterY() - mouseEvent.getY();
-            MainApp.getMainStage().getScene().setCursor(Cursor.MOVE);
+            MainApp2D.getMainStage().getScene().setCursor(Cursor.MOVE);
         });
-        getCircle().setOnMouseReleased(mouseEvent -> MainApp.getMainStage().getScene().setCursor(Cursor.HAND));
+        getCircle().setOnMouseReleased(mouseEvent -> MainApp2D.getMainStage().getScene().setCursor(Cursor.HAND));
         getCircle().setOnMouseDragged(mouseEvent -> {
             double newX = mouseEvent.getX() + dragDelta.x;
-            if (newX > 0 && newX < MainApp.getMainStage().getScene().getWidth()) {
+            if (newX > 0 && newX < MainApp2D.getMainStage().getScene().getWidth()) {
                 setX(newX);
             }
             double newY = mouseEvent.getY() + dragDelta.y;
-            if (newY > 0 && newY < MainApp.getMainStage().getScene().getHeight()) {
+            if (newY > 0 && newY < MainApp2D.getMainStage().getScene().getHeight()) {
                 setY(newY);
             }
         });
         getCircle().setOnMouseEntered(mouseEvent -> {
             if (!mouseEvent.isPrimaryButtonDown()) {
-                MainApp.getMainStage().getScene().setCursor(Cursor.HAND);
+                MainApp2D.getMainStage().getScene().setCursor(Cursor.HAND);
             }
         });
         getCircle().setOnMouseExited(mouseEvent -> {
             if (!mouseEvent.isPrimaryButtonDown()) {
-                MainApp.getMainStage().getScene().setCursor(Cursor.DEFAULT);
+                MainApp2D.getMainStage().getScene().setCursor(Cursor.DEFAULT);
             }
         });
     }
@@ -202,7 +202,7 @@ public class CurvePoint extends ShapeGroup {
     public void startConnection() {
         getCircle().setOnMouseClicked(mouseEvent -> {
             getCircle().setFill(Color.RED);
-            MainController.setCurrPoint(this);
+            MainController2D.setCurrPoint(this);
         });
     }
 
@@ -218,7 +218,7 @@ public class CurvePoint extends ShapeGroup {
     public void endConnection() {
         getCircle().setFill(Color.BLUE);
         getCircle().setOnMouseClicked(mouseEvent -> {
-            MainController.setCurrPoint(this);
+            MainController2D.setCurrPoint(this);
         });
     }
 

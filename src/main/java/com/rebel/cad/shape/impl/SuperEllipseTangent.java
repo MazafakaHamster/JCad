@@ -1,6 +1,6 @@
 package com.rebel.cad.shape.impl;
 
-import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.controllers.MainController2D;
 import com.rebel.cad.shape.Point;
 import com.rebel.cad.shape.Line;
 import com.rebel.cad.shape.SuperEllipse;
@@ -19,10 +19,10 @@ public class SuperEllipseTangent extends Line implements Tangent {
         List<Point> points = new ArrayList<>();
         for (double x = x0 - 50; x < x0 + 50; x += 0.5) {
             double y;
-            if (MainController.toRealY(y0) < 0) {
-                y = MainController.toRealY(-ellipse.function(x0)) + ellipse.derivative(x0, y0) * (x - x0);
+            if (MainController2D.toRealY(y0) < 0) {
+                y = MainController2D.toRealY(-ellipse.function(x0)) + ellipse.derivative(x0, y0) * (x - x0);
             } else {
-                y = MainController.toRealY(ellipse.function(x0)) + ellipse.derivative(x0, y0) * (x - x0);
+                y = MainController2D.toRealY(ellipse.function(x0)) + ellipse.derivative(x0, y0) * (x - x0);
             }
             points.add(new Point(x, y));
         }

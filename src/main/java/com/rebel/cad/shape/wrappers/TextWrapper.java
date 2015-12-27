@@ -1,6 +1,6 @@
 package com.rebel.cad.shape.wrappers;
 
-import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.controllers.MainController2D;
 import com.rebel.cad.shape.Transformable;
 import javafx.scene.text.Text;
 
@@ -32,19 +32,19 @@ public class TextWrapper extends Text implements Transformable, Serializable {
 
 
     public void project(double xx, double xy, double wx, double yx, double yy, double wy, double x, double y, double w) {
-        double x0 = MainController.toFakeX(getX());
-        double y0 = MainController.toFakeY(getY());
+        double x0 = MainController2D.toFakeX(getX());
+        double y0 = MainController2D.toFakeY(getY());
 
         double W = w + wx * x0 + wy * y0;
-        setX(MainController.toRealX((x0 + (x * w + xx * wx * x0 + xy * wy * y0) / W)));
-        setY(MainController.toRealY((y0 + (y * w + yx * wx * x0 + yy * wy * y0) / W)));
+        setX(MainController2D.toRealX((x0 + (x * w + xx * wx * x0 + xy * wy * y0) / W)));
+        setY(MainController2D.toRealY((y0 + (y * w + yx * wx * x0 + yy * wy * y0) / W)));
     }
 
     public void affinis(double xx, double xy, double yx, double yy, double dx, double dy) {
-        double x = MainController.toFakeX(getX());
-        double y = MainController.toFakeY(getY());
+        double x = MainController2D.toFakeX(getX());
+        double y = MainController2D.toFakeY(getY());
 
-        setX(MainController.toRealX(x * xx + y * xy + x + dx));
-        setY(MainController.toRealY(x * yx + y * yy + y + dy));
+        setX(MainController2D.toRealX(x * xx + y * xy + x + dx));
+        setY(MainController2D.toRealY(x * yx + y * yy + y + dy));
     }
 }

@@ -1,6 +1,6 @@
 package com.rebel.cad.shape;
 
-import com.rebel.cad.controllers.MainController;
+import com.rebel.cad.controllers.MainController2D;
 import com.rebel.cad.shape.wrappers.PolylineWrapper;
 
 import java.util.ArrayList;
@@ -35,11 +35,11 @@ public class SuperEllipse extends PolylineWrapper {
     }
 
     public double derivative(double x, double y) {
-        return (b * b * MainController.toFakeX(x) * Math.pow(Math.abs(MainController.toFakeX(x) / a), n - 2)) / (a * a * MainController.toFakeY(y) * Math.pow(Math.abs(MainController.toFakeY(y) / b), n - 2));
+        return (b * b * MainController2D.toFakeX(x) * Math.pow(Math.abs(MainController2D.toFakeX(x) / a), n - 2)) / (a * a * MainController2D.toFakeY(y) * Math.pow(Math.abs(MainController2D.toFakeY(y) / b), n - 2));
     }
 
     public double function(double x) {
-        return b * Math.pow(1 - Math.pow(Math.abs(MainController.toFakeX(x) / a), n), 1 / n);
+        return b * Math.pow(1 - Math.pow(Math.abs(MainController2D.toFakeX(x) / a), n), 1 / n);
     }
 
     public double getCenterX() {

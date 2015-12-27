@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 /**
  * Created by Slava on 04.09.2015.
  */
-public class MainApp extends Application {
+public class MainApp2D extends Application {
 
     public final static int INITIAL_WIDTH = 800;
     public final static int INITIAL_HEIGHT = 600;
@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main2D.fxml"));
         mainStage = primaryStage;
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("CAD");

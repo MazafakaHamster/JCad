@@ -1,6 +1,6 @@
 package com.rebel.cad.controllers;
 
-import com.rebel.cad.MainApp;
+import com.rebel.cad.MainApp2D;
 import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.shape.*;
 import com.rebel.cad.shape.impl.SuperEllipseNormal;
@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainController extends Controller implements Initializable {
+public class MainController2D extends Controller implements Initializable {
 
     private static int dotCount;
-    private static double width = MainApp.INITIAL_WIDTH;
-    private static double height = MainApp.INITIAL_HEIGHT;
+    private static double width = MainApp2D.INITIAL_WIDTH;
+    private static double height = MainApp2D.INITIAL_HEIGHT;
     private ArrayList<HintedDot> dotsList = new ArrayList<>();
     private HintedDot rotationPoint;
 
@@ -498,7 +498,7 @@ public class MainController extends Controller implements Initializable {
     private void showImage() {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApp.getMainStage());
+        dialog.initOwner(MainApp2D.getMainStage());
         Pane pane = new Pane();
         Image image = new Image(getClass().getResourceAsStream("/figure.png"));
         ImageView imageView = new ImageView();
@@ -536,7 +536,7 @@ public class MainController extends Controller implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        File file = fileChooser.showSaveDialog(MainApp.getMainStage());
+        File file = fileChooser.showSaveDialog(MainApp2D.getMainStage());
 
         if (file != null) {
             saveFile(file);
@@ -589,7 +589,7 @@ public class MainController extends Controller implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        File object = fileChooser.showOpenDialog(MainApp.getMainStage());
+        File object = fileChooser.showOpenDialog(MainApp2D.getMainStage());
         loadFile(object);
     }
 
