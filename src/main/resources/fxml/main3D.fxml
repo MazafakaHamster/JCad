@@ -173,6 +173,7 @@
                                        </children>
                                     </HBox>
                                     <Button mnemonicParsing="false" onAction="#buildTorus" text="Torus" />
+                                    <ToggleButton mnemonicParsing="false" onAction="#moveFig" text="Move Figure" />
                                  </children>
                                  <padding>
                                     <Insets right="5.0" />

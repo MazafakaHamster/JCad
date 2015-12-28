@@ -5,6 +5,7 @@ import com.rebel.cad.collections.ShapeGroup;
 import com.rebel.cad.shape.*;
 import com.rebel.cad.shape.wrappers.TextWrapper;
 import com.rebel.cad.util.Utils;
+import com.sun.java.accessibility.util.java.awt.TextComponentTranslator;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -95,6 +96,16 @@ public class MainController3D extends Controller implements Initializable {
     private Double alpha = Math.toRadians(0);
     private Double beta = Math.toRadians(83);
     private Double gamma = Math.toRadians(83);
+    private boolean moveFigure = false;
+
+    @FXML
+    private void moveFig() {
+        moveFigure = !moveFigure;
+    }
+
+    private double figX;
+    private double figY;
+    private double figZ;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -126,26 +137,51 @@ public class MainController3D extends Controller implements Initializable {
         });
 
         rootPane.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case NUMPAD7:
-                    centerPoint.setX(centerPoint.getX() + 1);
-                    break;
-                case NUMPAD9:
-                    centerPoint.setX(centerPoint.getX() - 1);
-                    break;
-                case NUMPAD4:
-                    centerPoint.setY(centerPoint.getY() + 1);
-                    break;
-                case NUMPAD6:
-                    centerPoint.setY(centerPoint.getY() - 1);
-                    break;
-                case NUMPAD8:
-                    centerPoint.setZ(centerPoint.getZ() + 1);
-                    break;
-                case NUMPAD2:centerPoint.setZ(centerPoint.getZ() - 1);
-                    break;
+            if (moveFigure) {
+                switch (event.getCode()) {
+                    case NUMPAD4:
+                        figX += 0.1;
+                        break;
+                    case NUMPAD6:
+                        figX -= 0.1;
+                        break;
+                    case NUMPAD8:
+                        figY += 0.1;
+                        break;
+                    case NUMPAD2:
+                        figY -= 0.1;
+                        break;
+                }
+                transform();
+            } else {
+                switch (event.getCode()) {
+                    case NUMPAD7:
+                        centerPoint.setX(centerPoint.getX() + 1);
+                        figX += 1;
+                        break;
+                    case NUMPAD9:
+                        centerPoint.setX(centerPoint.getX() - 1);
+                        figX -= 1;
+                        break;
+                    case NUMPAD4:
+                        centerPoint.setY(centerPoint.getY() + 1);
+                        figY += 1;
+                        break;
+                    case NUMPAD6:
+                        centerPoint.setY(centerPoint.getY() - 1);
+                        figY -= 1;
+                        break;
+                    case NUMPAD8:
+                        centerPoint.setZ(centerPoint.getZ() + 1);
+                        figZ += 1;
+                        break;
+                    case NUMPAD2:
+                        centerPoint.setZ(centerPoint.getZ() - 1);
+                        figZ -= 1;
+                        break;
+                }
+                transform();
             }
-            transform();
         });
 
         staticFigure = drawing;
@@ -156,6 +192,9 @@ public class MainController3D extends Controller implements Initializable {
 
         aTorusText.setText("200");
         bTorusText.setText("100");
+        load();
+        buildTorus();
+//        load();
     }
 
     private Line xAxis;
@@ -178,6 +217,7 @@ public class MainController3D extends Controller implements Initializable {
 
         return axis;
     }
+
 
     private Point pointR(double x, double y, double z, Point3D center) {
         double[][] projectionMatrix = Utils.multiply(
@@ -216,45 +256,6 @@ public class MainController3D extends Controller implements Initializable {
     }
 
     private Point pointR(double x, double y, double z) {
-        double[][] projectionMatrix = Utils.multiply(
-                Utils.multiply(
-                        new double[][]{
-                                {1, 0, 0},
-                                {0, Math.cos(beta), -Math.sin(beta)},
-                                {0, Math.sin(beta), Math.cos(beta)}
-                        },
-                        new double[][]{
-                                {Math.cos(alpha), 0, Math.sin(alpha)},
-                                {0, 1, 0},
-                                {-Math.sin(alpha), 0, Math.cos(alpha)}
-                        }),
-
-                new double[][]{
-                        {Math.cos(gamma), -Math.sin(gamma), 0},
-                        {Math.sin(gamma), Math.cos(gamma), 0},
-                        {0, 0, 1}
-                });
-
-        double[][] resultMatrix = Utils.multiply(
-                new double[][]{
-                        {1, 0, 0},
-                        {0, 1, 0},
-                        {0, 0, 1}},
-
-                Utils.multiply(projectionMatrix,
-                        new double[][]{
-                                {x},
-                                {y},
-                                {z},
-                        })
-        );
-        return new Point(toRealX(resultMatrix[0][0]), toRealY(-resultMatrix[1][0]));
-    }
-
-    private Point pointR(Point3D point3D) {
-        double x = point3D.getX();
-        double y = point3D.getY();
-        double z = point3D.getZ();
         double[][] projectionMatrix = Utils.multiply(
                 Utils.multiply(
                         new double[][]{
@@ -329,13 +330,59 @@ public class MainController3D extends Controller implements Initializable {
         );
     }
 
+    private Point pointR(Point3D point3D) {
+        double x = point3D.getX();
+        double y = point3D.getY();
+        double z = point3D.getZ();
+
+        if (!moveFigure) {
+            x += figX;
+            y += figY;
+            z += figZ;
+        }
+
+        double[][] projectionMatrix = Utils.multiply(
+                Utils.multiply(
+                        new double[][]{
+                                {1, 0, 0},
+                                {0, Math.cos(beta), -Math.sin(beta)},
+                                {0, Math.sin(beta), Math.cos(beta)}
+                        },
+                        new double[][]{
+                                {Math.cos(alpha), 0, Math.sin(alpha)},
+                                {0, 1, 0},
+                                {-Math.sin(alpha), 0, Math.cos(alpha)}
+                        }),
+
+                new double[][]{
+                        {Math.cos(gamma), -Math.sin(gamma), 0},
+                        {Math.sin(gamma), Math.cos(gamma), 0},
+                        {0, 0, 1}
+                });
+
+        double[][] resultMatrix = Utils.multiply(
+                new double[][]{
+                        {1, 0, 0},
+                        {0, 1, 0},
+                        {0, 0, 1}},
+
+                Utils.multiply(projectionMatrix,
+                        new double[][]{
+                                {x},
+                                {y},
+                                {z},
+                        })
+        );
+        return new Point(toRealX(resultMatrix[0][0]), toRealY(-resultMatrix[1][0]));
+    }
+
     @FXML
     private void buildTorus() {
         erase();
         double R1 = Double.parseDouble(aTorusText.getText());
         double R2 = Double.parseDouble(bTorusText.getText());
         double stepU = 90;
-        double stepV = 1;
+        double stepV = 2;
         double maxV = 360;
         double maxU = 225;
         double opacity = 0.1;
@@ -358,7 +405,30 @@ public class MainController3D extends Controller implements Initializable {
                 drawing.getChildren().add(new Line(points.get(i), points.get(i + 1), opacity));
             }
         }
+        rebuildCurves();
         clip();
+    }
+
+    private void pointToTorus(CurvePoint point) {
+        Point temp = pointR(XYtoUV(point));
+        point.setX(temp.getX());
+        point.setY(temp.getY());
+    }
+
+    private Point3D XYtoUV(CurvePoint point) {
+        double v = (point.getX() / Double.parseDouble(bTorusText.getText())) * (Math.PI / Double.parseDouble(bTorusText.getText()));
+        double u = (point.getY() / Double.parseDouble(bTorusText.getText())) * (Math.PI / Double.parseDouble(bTorusText.getText()));
+        if (moveFigure)
+            return UVtoXYZ(u + figY, v + figX);
+        else return UVtoXYZ(u, v);
+    }
+
+    private Point3D UVtoXYZ(double u, double v) {
+        Point3D xyz = new Point3D();
+        xyz.setX(TorusHelper.getX(Double.parseDouble(aTorusText.getText()), Double.parseDouble(bTorusText.getText()), u, v));
+        xyz.setY(TorusHelper.getY(Double.parseDouble(aTorusText.getText()), Double.parseDouble(bTorusText.getText()), u, v));
+        xyz.setZ(TorusHelper.getZ(Double.parseDouble(bTorusText.getText()), u));
+        return xyz;
     }
 
     @FXML
@@ -446,45 +516,55 @@ public class MainController3D extends Controller implements Initializable {
         drawing.move(x, y);
     }
 
+    private ArrayList<Curve> etalonCurves;
+
+    private void rebuildCurves() {
+        drawing.getChildren().removeAll(curves);
+        curves.clear();
+        for (Curve newCurve : etalonCurves) {
+            CurvePoint a = new CurvePoint(newCurve.getA().getX(), newCurve.getA().getY(), newCurve.getA().getWeight());
+            CurvePoint b = new CurvePoint(newCurve.getB().getX(), newCurve.getB().getY(), newCurve.getB().getWeight());
+            CurvePoint c = new CurvePoint(newCurve.getC().getX(), newCurve.getC().getY(), newCurve.getC().getWeight());
+            CurvePoint d = new CurvePoint(newCurve.getD().getX(), newCurve.getD().getY(), newCurve.getD().getWeight());
+            pointToTorus(a);
+            pointToTorus(c);
+            pointToTorus(d);
+            pointToTorus(b);
+            Curve curve = new Curve(a, b, c, d, false);
+            drawing.getChildren().add(curve);
+        }
+    }
+
     private void loadFile(File file) {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
-            ArrayList<Curve> newCurves = (ArrayList<Curve>) inputStream.readObject();
+            etalonCurves = (ArrayList<Curve>) inputStream.readObject();
 
-            for (Curve newCurve : newCurves) {
+            for (Curve newCurve : etalonCurves) {
                 CurvePoint a = new CurvePoint(newCurve.getA().getX(), newCurve.getA().getY(), newCurve.getA().getWeight());
                 CurvePoint b = new CurvePoint(newCurve.getB().getX(), newCurve.getB().getY(), newCurve.getB().getWeight());
                 CurvePoint c = new CurvePoint(newCurve.getC().getX(), newCurve.getC().getY(), newCurve.getC().getWeight());
                 CurvePoint d = new CurvePoint(newCurve.getD().getX(), newCurve.getD().getY(), newCurve.getD().getWeight());
-                Curve curve = new Curve(a, b, c, d);
+                pointToTorus(a);
+                pointToTorus(c);
+                pointToTorus(d);
+                pointToTorus(b);
+                Curve curve = new Curve(a, b, c, d, false);
                 curves.add(curve);
                 drawing.getChildren().add(curve);
-                loadConnect();
             }
         } catch (ClassNotFoundException | IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    private void loadConnect() {
-        for (Curve curveA : curves) {
-            curves.stream().filter(curveB -> curveA != curveB).forEach(curveB -> {
-                for (CurvePoint pointA : curveA.getPoints()) {
-                    curveB.getPoints().stream().filter(pointB -> pointA != pointB).filter(pointA::equals).forEach(pointB -> {
-                        curveA.connect(pointB, pointA);
-                    });
-                }
-            });
-        }
-    }
-
     @FXML
     private void load() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Drawing");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
-        fileChooser.getExtensionFilters().add(extFilter);
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Drawing");
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
+//        fileChooser.getExtensionFilters().add(extFilter);
 
-        File object = fileChooser.showOpenDialog(MainApp3D.getMainStage());
+        File object = new File("D:\\Users\\Slava\\Desktop\\test.drw");//fileChooser.showOpenDialog(MainApp3D.getMainStage());
         loadFile(object);
     }
 
