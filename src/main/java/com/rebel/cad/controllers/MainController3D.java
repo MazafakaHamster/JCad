@@ -416,8 +416,8 @@ public class MainController3D extends Controller implements Initializable {
     }
 
     private Point3D XYtoUV(CurvePoint point) {
-        double v = (point.getX() / Double.parseDouble(bTorusText.getText())) * (Math.PI / Double.parseDouble(bTorusText.getText()));
-        double u = (point.getY() / Double.parseDouble(bTorusText.getText())) * (Math.PI / Double.parseDouble(bTorusText.getText()));
+        double v = (point.getX() / Double.parseDouble(bTorusText.getText())) * (5 * Math.PI / Double.parseDouble(bTorusText.getText()));
+        double u = (point.getY() / Double.parseDouble(bTorusText.getText())) * (5 * Math.PI / Double.parseDouble(bTorusText.getText()));
         if (moveFigure)
             return UVtoXYZ(u + figY, v + figX);
         else return UVtoXYZ(u, v);
@@ -559,12 +559,12 @@ public class MainController3D extends Controller implements Initializable {
 
     @FXML
     private void load() {
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Open Drawing");
-//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
-//        fileChooser.getExtensionFilters().add(extFilter);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Drawing");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("DRW files (*.drw)", "*.drw");
+        fileChooser.getExtensionFilters().add(extFilter);
 
-        File object = new File("D:\\Users\\Slava\\Desktop\\test.drw");//fileChooser.showOpenDialog(MainApp3D.getMainStage());
+        File object = fileChooser.showOpenDialog(MainApp3D.getMainStage());
         loadFile(object);
     }
 
